@@ -1311,7 +1311,7 @@
                     const t = Math.min((elapsed - reverseMs) / forwardMs, 1);
 
                     // Forward run: accelerate smoothly for 22s like a fast film reel.
-                    const speedPxPerSec = 180 + 2600 * t * t;
+                    const speedPxPerSec = 180 + 2100 * t * t;
                     offsetX -= speedPxPerSec * deltaSec;
                 }
 
