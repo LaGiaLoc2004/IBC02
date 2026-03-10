@@ -61,6 +61,209 @@
             opacity: 1;
         }
 
+        /* Film Scene */
+        #film-scene {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            align-items: center;
+            justify-content: flex-start;
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+        }
+
+        .film-strip {
+            display: flex;
+            gap: 20px;
+            transform: translate3d(0, 0, 0);
+            will-change: transform;
+            padding-left: 6vw;
+        }
+
+        .film-strip.starting {
+            animation: reelIgnition 0.9s ease-out 1;
+            filter: contrast(1.08) saturate(1.06);
+        }
+
+        .film-strip img {
+            width: 200px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            flex: 0 0 auto;
+        }
+
+        .film-loading,
+        .film-caption {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 230, 246, 0.95);
+            text-shadow: 0 0 10px rgba(255, 120, 210, 0.6);
+            pointer-events: none;
+        }
+
+        .film-loading {
+            top: 16%;
+            font-size: 4.2vw;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .film-loading.show {
+            opacity: 1;
+        }
+
+        .film-caption {
+            bottom: 8%;
+            font-size: 3.8vw;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .film-caption.show {
+            opacity: 1;
+        }
+
+        /* Comment Scene */
+        #comment-scene {
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 200, 230, 0.16), transparent 38%),
+                radial-gradient(circle at 80% 78%, rgba(255, 150, 210, 0.14), transparent 40%),
+                linear-gradient(160deg, #09070f 0%, #130a1e 55%, #1b0f24 100%);
+            padding: 14px;
+        }
+
+        .comment-stage {
+            width: min(96vw, 760px);
+            max-height: 92dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comment-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-areas:
+                ". top ."
+                "leftTop . rightTop"
+                "leftMid avatar rightMid"
+                "leftBottom . rightBottom"
+                ". bottom .";
+            gap: 10px;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .comment-cell {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 88px;
+        }
+
+        .slot-top { grid-area: top; }
+        .slot-left-top { grid-area: leftTop; }
+        .slot-right-top { grid-area: rightTop; }
+        .slot-left-mid { grid-area: leftMid; }
+        .slot-right-mid { grid-area: rightMid; }
+        .slot-left-bottom { grid-area: leftBottom; }
+        .slot-right-bottom { grid-area: rightBottom; }
+        .slot-bottom { grid-area: bottom; }
+        .slot-avatar { grid-area: avatar; }
+
+        .comment-card {
+            width: min(100%, 200px);
+            background: rgba(255, 245, 251, 0.94);
+            color: #3a1530;
+            border-radius: 14px;
+            padding: 10px 10px 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(16px) scale(0.92);
+            filter: blur(7px);
+            transition: opacity 0.68s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.68s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.68s ease;
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        .comment-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        .comment-text {
+            font-size: clamp(0.72rem, 2.2vw, 0.95rem);
+            line-height: 1.4;
+        }
+
+        .comment-author {
+            margin-top: 6px;
+            font-size: clamp(0.66rem, 2vw, 0.86rem);
+            font-weight: 700;
+            color: #8e2b69;
+        }
+
+        .center-avatar-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-avatar {
+            width: clamp(120px, 32vw, 160px);
+            height: clamp(120px, 32vw, 160px);
+            border-radius: 999px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 196, 235, 0.9);
+            box-shadow: 0 0 22px rgba(255, 128, 210, 0.45), 0 10px 18px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: scale(0.8) translateY(8px);
+            filter: blur(4px);
+            transition: opacity 0.65s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.65s ease;
+        }
+
+        .center-avatar.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
+            animation: avatarGlow 2.4s ease-in-out infinite;
+        }
+
+        .comment-final {
+            text-align: center;
+            font-size: clamp(0.88rem, 2.7vw, 1.1rem);
+            color: #ffe8f6;
+            text-shadow: 0 0 10px rgba(255, 140, 214, 0.5);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .comment-final.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .comment-heart {
+            display: inline-block;
+            margin-left: 6px;
+            animation: tinyHeartPulse 1.1s ease-in-out infinite;
+        }
+
         /* Unlock Screen */
         #unlock-screen {
             position: fixed;
@@ -454,13 +657,13 @@
             min-width: 34vw;
         }
 
-        #btnOkie {
+        #okBtn {
             color: #2e0920;
             background: linear-gradient(135deg, #ffd7ef 0%, #ff9dda 45%, #f46db9 100%);
             box-shadow: 0 0 18px rgba(255, 125, 211, 0.7), 0 8px 16px rgba(255, 125, 211, 0.3);
         }
 
-        #btnOkie:hover {
+        #okBtn:hover {
             transform: translateY(-2px);
             box-shadow: 0 0 22px rgba(255, 125, 211, 0.86), 0 12px 20px rgba(255, 125, 211, 0.4);
         }
@@ -615,6 +818,31 @@
             to { background-position: 120% 0; }
         }
 
+        @keyframes reelIgnition {
+            0% {
+                filter: blur(1.8px);
+            }
+            30% {
+                filter: blur(1px);
+            }
+            60% {
+                filter: blur(0.4px);
+            }
+            100% {
+                filter: blur(0);
+            }
+        }
+
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 18px rgba(255, 125, 211, 0.42), 0 10px 18px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 150, 222, 0.72), 0 10px 18px rgba(0, 0, 0, 0.3); }
+        }
+
+        @keyframes tinyHeartPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(255, 125, 211, 0.4)); }
+            50% { transform: scale(1.18); filter: drop-shadow(0 0 8px rgba(255, 125, 211, 0.8)); }
+        }
+
         @media (min-width: 431px) {
             :root {
                 --zoom-scale: 5.6;
@@ -639,6 +867,27 @@
                 font-size: clamp(0.95rem, 2vw, 1.05rem);
             }
 
+            .film-loading {
+                font-size: clamp(1rem, 2.4vw, 1.35rem);
+            }
+
+            .film-caption {
+                font-size: clamp(0.9rem, 2vw, 1.2rem);
+            }
+
+            .film-strip img {
+                width: min(200px, 22vw);
+                height: min(300px, 33vw);
+            }
+
+            .comment-grid {
+                gap: 12px;
+            }
+
+            .comment-cell {
+                min-height: 94px;
+            }
+
             .unlock-slider-bar {
                 height: 74px;
             }
@@ -650,6 +899,30 @@
 
             .unlock-text {
                 line-height: 74px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .comment-stage {
+                width: 97vw;
+                gap: 10px;
+            }
+
+            .comment-grid {
+                gap: 7px;
+            }
+
+            .comment-cell {
+                min-height: 78px;
+            }
+
+            .comment-card {
+                width: min(100%, 165px);
+            }
+
+            .comment-card {
+                padding: 8px 8px 7px;
+                border-radius: 12px;
             }
         }
     </style>
@@ -710,6 +983,30 @@
         <div class="ibc-logo">IBC02</div>
     </div>
 
+        <div id="film-scene" class="scene">
+            <div class="film-loading" id="filmLoading">Đang tua lại thanh xuân...</div>
+            <div class="film-strip" id="filmStrip"></div>
+            <div class="film-caption" id="filmCaption"></div>
+        </div>
+
+    <div id="comment-scene" class="scene">
+        <div class="comment-stage">
+            <div class="comment-grid">
+                <div class="comment-cell slot-top"><div class="comment-card" data-comment-card="0"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-left-top"><div class="comment-card" data-comment-card="1"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-right-top"><div class="comment-card" data-comment-card="2"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-left-mid"><div class="comment-card" data-comment-card="3"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-avatar center-avatar-wrap"><img id="commentGirlImage" class="center-avatar" src="https://picsum.photos/seed/girl-profile/400/400" alt="Girl profile" /></div>
+                <div class="comment-cell slot-right-mid"><div class="comment-card" data-comment-card="4"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-left-bottom"><div class="comment-card" data-comment-card="5"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-right-bottom"><div class="comment-card" data-comment-card="6"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-bottom"><div class="comment-card" data-comment-card="7"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+            </div>
+
+            <div id="commentFinalText" class="comment-final">Cảm ơn vì đã là một phần của IBC02.<span class="comment-heart">❤️</span></div>
+        </div>
+    </div>
+
     <div id="scene4_form" class="scene">
         <div class="form-card">
             <p class="form-message">
@@ -719,7 +1016,7 @@
             </p>
 
             <div id="choiceButtons" class="choice-buttons">
-                <button id="btnOkie" class="choice-button" type="button">OKIE</button>
+                <button id="okBtn" class="choice-button" type="button">OKIE</button>
                 <button id="btnKo" class="choice-button" type="button">KO</button>
             </div>
 
@@ -745,13 +1042,279 @@
     <script>
         let selectedName = "";
         let heartRainTimer = null;
+        let filmAnimationFrame = null;
+        let heartRainStopTimer = null;
+        let commentSceneTimerHandles = [];
+
+        const classMembers = [
+            "name1", "name2", "name3", "name4", "name5", "name6", "name7", "name8", "name9", "name10", "name11",
+            "name12", "name13", "name14", "name15", "name16", "name17", "name18", "name19", "name20", "name21", "name22"
+        ];
 
         const scenes = {
             scene1: document.getElementById("scene1_space"),
             scene2: document.getElementById("scene2_text"),
             scene3: document.getElementById("scene3_logo"),
+            film: document.getElementById("film-scene"),
+            comment: document.getElementById("comment-scene"),
             scene4: document.getElementById("scene4_form")
         };
+
+        const comments = [
+            { name: "Nam", text: "Cảm ơn bạn đã luôn nhẹ nhàng và tinh tế với cả lớp." },
+            { name: "Huy", text: "Chúc bạn luôn rạng rỡ như cách bạn làm bọn mình vui mỗi ngày." },
+            { name: "Tùng", text: "Bạn là một phần ký ức rất đẹp của IBC02." },
+            { name: "Phúc", text: "Cảm ơn bạn vì sự chăm chỉ và năng lượng tích cực." },
+            { name: "Khoa", text: "Mong bạn luôn tự tin trên mọi chặng đường phía trước." },
+            { name: "Quân", text: "Đi cùng bạn trong 4 năm là một điều rất đáng quý." },
+            { name: "Đạt", text: "Chúc bạn gặp thật nhiều may mắn và hạnh phúc." },
+            { name: "Long", text: "Cảm ơn bạn đã là một đóa hồng đẹp của IBC02." }
+        ];
+
+        function normalizeName(value) {
+            return value
+                .trim()
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function getMemberSetIndex(name) {
+            const normalizedName = normalizeName(name);
+            const normalizedMembers = classMembers.map(normalizeName);
+            const exactIndex = normalizedMembers.indexOf(normalizedName);
+
+            if (exactIndex >= 0) {
+                return exactIndex;
+            }
+
+            let hash = 0;
+            for (let i = 0; i < normalizedName.length; i += 1) {
+                hash = (hash + normalizedName.charCodeAt(i) * (i + 1)) % 22;
+            }
+            return hash;
+        }
+
+        function buildImageSetPaths(setIndex) {
+            const folder = setIndex + 1;
+            return Array.from({ length: 20 }, (_, i) => `images/class/${folder}/img${i + 1}.jpg`);
+        }
+
+        function preloadImageWithFallback(src, fallbackSrc) {
+            return new Promise((resolve) => {
+                let done = false;
+                const img = new Image();
+
+                const finish = (value) => {
+                    if (!done) {
+                        done = true;
+                        resolve(value);
+                    }
+                };
+
+                img.onload = () => finish(src);
+                img.onerror = () => finish(fallbackSrc);
+                img.src = src;
+
+                setTimeout(() => finish(fallbackSrc), 1500);
+            });
+        }
+
+        async function preloadFilmImages(paths, setIndex) {
+            const fallbackPaths = paths.map((_, i) => `https://picsum.photos/seed/class-${setIndex + 1}-img-${i + 1}/600/900`);
+            const loaded = await Promise.all(paths.map((path, i) => preloadImageWithFallback(path, fallbackPaths[i])));
+            return loaded;
+        }
+
+        function renderFilmStrip(imageUrls) {
+            const strip = document.getElementById("filmStrip");
+            strip.innerHTML = "";
+
+            const repeated = [...imageUrls, ...imageUrls, ...imageUrls];
+            repeated.forEach((url, i) => {
+                const img = document.createElement("img");
+                img.src = url;
+                img.alt = `Film frame ${i + 1}`;
+                strip.appendChild(img);
+            });
+        }
+
+        function getFilmCycleWidth(uniqueCount) {
+            const strip = document.getElementById("filmStrip");
+            const imgs = strip.querySelectorAll("img");
+            if (!imgs.length) {
+                return 0;
+            }
+
+            const firstRect = imgs[0].getBoundingClientRect();
+            const style = window.getComputedStyle(strip);
+            const gap = parseFloat(style.gap || style.columnGap || "20") || 20;
+
+            return (firstRect.width + gap) * uniqueCount;
+        }
+
+        function runFilmAnimation(totalDurationMs) {
+            const strip = document.getElementById("filmStrip");
+            const filmLoading = document.getElementById("filmLoading");
+            const filmCaption = document.getElementById("filmCaption");
+            const images = strip.querySelectorAll("img");
+            const uniqueCount = Math.max(1, images.length / 3);
+            const cycleWidth = getFilmCycleWidth(uniqueCount);
+
+            if (cycleWidth <= 0) {
+                return;
+            }
+
+            if (filmAnimationFrame) {
+                cancelAnimationFrame(filmAnimationFrame);
+            }
+
+            const startTime = performance.now();
+            let lastTime = startTime;
+            let captionUpdated = false;
+            let enteredForwardPhase = false;
+
+            const slotWidth = cycleWidth / uniqueCount;
+            // Start at image 2 in the middle copy.
+            const startOffset = -cycleWidth - slotWidth;
+            // Pull back ~1.2 image toward image 1.
+            const backOffset = startOffset + slotWidth * 1.2;
+            let offsetX = startOffset;
+
+            const reverseMs = 3000;
+            const forwardMs = 22000;
+            const expectedTotal = totalDurationMs;
+
+            const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+            const normalizeOffset = (value) => {
+                let normalized = value;
+                while (normalized <= -2 * cycleWidth) {
+                    normalized += cycleWidth;
+                }
+                while (normalized > -cycleWidth) {
+                    normalized -= cycleWidth;
+                }
+                return normalized;
+            };
+
+            const step = (now) => {
+                const elapsed = now - startTime;
+                const deltaSec = Math.max(0, (now - lastTime) / 1000);
+                lastTime = now;
+
+                if (elapsed <= reverseMs) {
+                    const t = Math.min(elapsed / reverseMs, 1);
+                    const p = easeOutCubic(t);
+                    offsetX = startOffset + (backOffset - startOffset) * p;
+                } else {
+                    if (!enteredForwardPhase) {
+                        enteredForwardPhase = true;
+                        offsetX = backOffset;
+                    }
+                    const t = Math.min((elapsed - reverseMs) / forwardMs, 1);
+
+                    // Forward run: accelerate smoothly for 22s like a fast film reel.
+                    const speedPxPerSec = 180 + 2600 * t * t;
+                    offsetX -= speedPxPerSec * deltaSec;
+                }
+
+                strip.style.transform = `translate3d(${normalizeOffset(offsetX)}px, 0, 0)`;
+
+                if (elapsed >= expectedTotal && !captionUpdated) {
+                    captionUpdated = true;
+                    filmLoading.classList.remove("show");
+                    filmCaption.textContent = "Sẵn sàng chuyển sang cảnh tiếp theo...";
+                    filmCaption.classList.add("show");
+
+                    setTimeout(() => {
+                        showScene("comment-scene");
+                        startCommentScene(selectedName);
+                    }, 900);
+                }
+
+                filmAnimationFrame = requestAnimationFrame(step);
+            };
+
+            filmAnimationFrame = requestAnimationFrame(step);
+        }
+
+        function toGirlFolderName(name) {
+            return normalizeName(name || "name1").replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "");
+        }
+
+        function clearCommentTimers() {
+            commentSceneTimerHandles.forEach((id) => clearTimeout(id));
+            commentSceneTimerHandles = [];
+        }
+
+        function startCommentScene(girlName) {
+            if (filmAnimationFrame) {
+                cancelAnimationFrame(filmAnimationFrame);
+                filmAnimationFrame = null;
+            }
+
+            clearCommentTimers();
+
+            const cards = Array.from(document.querySelectorAll("[data-comment-card]"));
+            const finalText = document.getElementById("commentFinalText");
+            const girlImage = document.getElementById("commentGirlImage");
+
+            cards.forEach((card, i) => {
+                card.classList.remove("show");
+                const textEl = card.querySelector("[data-comment-text]");
+                const authorEl = card.querySelector("[data-comment-author]");
+                textEl.textContent = `\"${comments[i].text}\"`;
+                authorEl.textContent = `- ${comments[i].name}`;
+            });
+
+            finalText.classList.remove("show");
+            girlImage.classList.remove("show");
+
+            const folderName = toGirlFolderName(girlName);
+            const targetSrc = `images/girls/${folderName}/profile.jpg`;
+            girlImage.src = targetSrc;
+            girlImage.onerror = () => {
+                girlImage.onerror = null;
+                girlImage.src = "https://picsum.photos/seed/girl-profile-fallback/400/400";
+            };
+
+            commentSceneTimerHandles.push(setTimeout(() => {
+                girlImage.classList.add("show");
+            }, 120));
+
+            let totalDelay = 520;
+            cards.forEach((card) => {
+                const stepDelay = 920;
+                totalDelay += stepDelay;
+                commentSceneTimerHandles.push(setTimeout(() => {
+                    card.classList.add("show");
+                }, totalDelay));
+            });
+
+            commentSceneTimerHandles.push(setTimeout(() => {
+                finalText.classList.add("show");
+            }, totalDelay + 700));
+        }
+
+        async function startFilmSceneForName(userName) {
+            const filmLoading = document.getElementById("filmLoading");
+            const filmCaption = document.getElementById("filmCaption");
+            const filmStrip = document.getElementById("filmStrip");
+
+            filmLoading.textContent = "Đang tua lại thanh xuân...";
+            filmCaption.classList.remove("show");
+            filmLoading.classList.add("show");
+
+            const setIndex = getMemberSetIndex(userName);
+            const imagePaths = buildImageSetPaths(setIndex);
+            const loadedImages = await preloadFilmImages(imagePaths, setIndex);
+
+            renderFilmStrip(loadedImages);
+            filmStrip.classList.add("starting");
+            setTimeout(() => filmStrip.classList.remove("starting"), 950);
+            runFilmAnimation(25000);
+        }
 
         function showScene(sceneId) {
             Object.values(scenes).forEach((scene) => scene.classList.remove("active"));
@@ -886,6 +1449,17 @@
             heartRainTimer = setInterval(createHeart, 200);
         }
 
+        function stopHeartRain() {
+            if (heartRainTimer) {
+                clearInterval(heartRainTimer);
+                heartRainTimer = null;
+            }
+            if (heartRainStopTimer) {
+                clearTimeout(heartRainStopTimer);
+                heartRainStopTimer = null;
+            }
+        }
+
         function setupScene4Form() {
             let koScale = 1;
 
@@ -917,11 +1491,18 @@
             const speechBubble = document.getElementById("speechBubble");
             const nameInputArea = document.getElementById("nameInputArea");
             const happyImage = document.getElementById("happyImage");
-            const btnOkie = document.getElementById("btnOkie");
+            const okBtn = document.getElementById("okBtn");
             const btnKo = document.getElementById("btnKo");
             const nameInput = document.getElementById("nameInput");
             const confirmBtn = document.getElementById("confirmBtn");
             const resultText = document.getElementById("resultText");
+
+            const goToFilmScene = (nameCandidate) => {
+                const normalizedCandidate = nameCandidate && nameCandidate.trim() ? nameCandidate.trim() : "name1";
+                selectedName = normalizedCandidate;
+                showScene("film-scene");
+                startFilmSceneForName(selectedName);
+            };
 
             btnKo.addEventListener("click", () => {
                 koScale -= 0.15;
@@ -933,15 +1514,25 @@
                 nameInputArea.classList.remove("show");
             });
 
-            btnOkie.addEventListener("click", () => {
+            okBtn.addEventListener("click", () => {
                 const happySrc = getRandomImage(happyImages);
                 reactionImage.src = happySrc;
                 happyImage.src = happySrc;
-                reactionArea.classList.remove("show");
+                speechBubble.textContent = "Hihi cảm ơn bạn nha 💖";
+                reactionArea.classList.add("show");
                 choiceButtons.classList.add("hidden");
-                nameInputArea.classList.add("show");
                 startHeartRain();
-                nameInput.focus();
+                if (heartRainStopTimer) {
+                    clearTimeout(heartRainStopTimer);
+                }
+                heartRainStopTimer = setTimeout(() => {
+                    stopHeartRain();
+                }, 1200);
+
+                setTimeout(() => {
+                    nameInputArea.classList.add("show");
+                    nameInput.focus();
+                }, 1000);
             });
 
             confirmBtn.addEventListener("click", () => {
@@ -954,6 +1545,11 @@
                 selectedName = fullName;
                 resultText.textContent = `Cảm ơn ${selectedName}. Dữ liệu đã được lưu cho cảnh tiếp theo.`;
                 resultText.classList.add("show");
+                stopHeartRain();
+
+                setTimeout(() => {
+                    goToFilmScene(selectedName);
+                }, 250);
             });
         }
 
@@ -1041,10 +1637,12 @@
             window.addEventListener("mouseup", pointerUp);
         }
 
-        createParticles();
-        setupMarvelFrames();
-        setupScene4Form();
-        setupUnlockScreen();
+        document.addEventListener("DOMContentLoaded", () => {
+            createParticles();
+            setupMarvelFrames();
+            setupScene4Form();
+            setupUnlockScreen();
+        });
     </script>
 </body>
 </html>
