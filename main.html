@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IBC02 - International Women's Day</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --text-light: #f8f6ff;
+            --pink-soft: #f5b2d7;
+            --pink-glow: #ff8fd1;
+            --gold-1: #ffe29f;
+            --gold-2: #de8a45;
+            --zoom-scale: 8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overflow-x: hidden;
+            font-family: "Be Vietnam Pro", "Noto Sans", Arial, sans-serif;
+            color: var(--text-light);
+            background: radial-gradient(circle at 30% 20%, #27133f 0%, #09090f 40%, #030304 100%);
+        }
+
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        .scene {
+            position: fixed;
+            inset: 0;
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+            overflow: hidden;
+            width: 100vw;
+            min-height: 100dvh;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        .scene.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Unlock Screen */
+        #unlock-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                linear-gradient(180deg, #5a5d62 0%, #35383d 33%, #1d2024 70%, #0f1114 100%);
+            overflow: hidden;
+            transition: opacity 0.65s ease;
+        }
+
+        #unlock-screen::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 12% 22%, rgba(255, 255, 255, 0.23) 0 2px, transparent 5px),
+                radial-gradient(circle at 22% 14%, rgba(255, 255, 255, 0.2) 0 1.8px, transparent 4px),
+                radial-gradient(circle at 35% 32%, rgba(255, 255, 255, 0.16) 0 2.2px, transparent 5px),
+                radial-gradient(circle at 48% 12%, rgba(255, 255, 255, 0.2) 0 1.5px, transparent 4px),
+                radial-gradient(circle at 62% 24%, rgba(255, 255, 255, 0.18) 0 2px, transparent 5px),
+                radial-gradient(circle at 76% 16%, rgba(255, 255, 255, 0.14) 0 1.8px, transparent 4px),
+                radial-gradient(circle at 88% 28%, rgba(255, 255, 255, 0.16) 0 2px, transparent 5px);
+            opacity: 0.35;
+            filter: blur(0.2px);
+            pointer-events: none;
+        }
+
+        #unlock-screen::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.32));
+            pointer-events: none;
+        }
+
+        #unlock-screen.unlocked {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .unlock-slider-bar {
+            width: 85vw;
+            max-width: 520px;
+            height: 70px;
+            border-radius: 35px;
+            background: linear-gradient(to bottom, #3b3b3b, #1c1c1c);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow:
+                inset 0 2px 6px rgba(255, 255, 255, 0.15),
+                inset 0 -3px 6px rgba(0, 0, 0, 0.45),
+                0 14px 24px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            z-index: 2;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .unlock-handle {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            background: linear-gradient(to bottom, #f2f2f2, #cfcfcf);
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #666;
+            box-shadow:
+                inset 0 2px 5px rgba(255, 255, 255, 0.8),
+                0 4px 8px rgba(0, 0, 0, 0.4);
+            transition: left 0.25s ease;
+            will-change: left;
+            z-index: 3;
+        }
+
+        .unlock-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 70px;
+            font-size: 20px;
+            letter-spacing: 2px;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.22) 0%,
+                rgba(255, 255, 255, 0.9) 48%,
+                rgba(255, 255, 255, 0.22) 100%
+            );
+            background-size: 220% 100%;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.32);
+            animation: shimmerText 2.2s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Scene 1 */
+        #scene1_space {
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .stars,
+        .stars::before,
+        .stars::after {
+            position: absolute;
+            inset: 0;
+            content: "";
+            background-image:
+                radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1.5px 1.5px at 70% 60%, rgba(255, 220, 250, 0.7), transparent),
+                radial-gradient(1.2px 1.2px at 40% 80%, rgba(255, 255, 220, 0.6), transparent),
+                radial-gradient(1.5px 1.5px at 85% 20%, rgba(255, 255, 255, 0.7), transparent);
+            animation: starsDrift 12s linear infinite;
+        }
+
+        .stars::before {
+            animation-duration: 9s;
+            opacity: 0.55;
+        }
+
+        .stars::after {
+            animation-duration: 6s;
+            opacity: 0.35;
+        }
+
+        .particle-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(255, 230, 250, 0.85);
+            box-shadow: 0 0 14px rgba(255, 135, 210, 0.8);
+            animation: particleDrop 4s linear infinite;
+        }
+
+        .image-frame {
+            position: relative;
+            width: 90vw;
+            height: 50vh;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            isolation: isolate;
+            background: #09090f;
+        }
+
+        .image-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .zoom-stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            overflow: hidden;
+            clip-path: inset(0 round 20px);
+            border: 1px solid rgba(255, 170, 225, 0.3);
+            box-shadow: 0 0 34px rgba(255, 130, 210, 0.25), 0 40px 80px rgba(0, 0, 0, 0.65);
+            background: #0b0712;
+        }
+
+        .zoom-layer {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1);
+            transition: transform 1.5s cubic-bezier(0.16, 0.84, 0.28, 1), opacity 0.5s ease;
+            transform-origin: center;
+            backface-visibility: hidden;
+            will-change: transform, opacity;
+            border-radius: inherit;
+            overflow: hidden;
+        }
+
+        .zoom-layer img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            filter: saturate(1.08) contrast(1.06);
+        }
+
+        .zoom-layer .label {
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            letter-spacing: 1px;
+            background: rgba(12, 8, 20, 0.65);
+            border: 1px solid rgba(255, 170, 220, 0.38);
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 130, 210, 0.85);
+        }
+
+        .zoom-layer.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .zoom-layer.zooming {
+            transform: scale(var(--zoom-scale));
+        }
+
+        .zoom-layer.fade {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .camera-shake {
+            animation: cameraShake 1.5s linear;
+        }
+
+        .space-title {
+            position: absolute;
+            top: 4vh;
+            left: 50%;
+            transform: translateX(-50%);
+            text-transform: uppercase;
+            letter-spacing: 0.35vw;
+            font-size: 4.2vw;
+            text-shadow: 0 0 16px rgba(255, 130, 210, 0.85);
+            z-index: 4;
+            text-align: center;
+            padding: 0 2vw;
+            max-width: 92vw;
+        }
+
+        /* Scene 2 */
+        #scene2_text {
+            background: #000;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 12px;
+        }
+
+        .intro-text {
+            text-align: center;
+            font-size: 6vw;
+            line-height: 1.5;
+            width: 100%;
+            max-width: 90vw;
+            margin: auto;
+            text-shadow: 0 0 12px rgba(255, 145, 215, 0.85), 0 0 32px rgba(245, 178, 215, 0.35);
+            min-height: 3.4em;
+            animation: fadeInUp 0.8s ease;
+            white-space: normal;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 0.08em;
+            height: 1em;
+            margin-left: 6px;
+            vertical-align: -0.14em;
+            background: var(--pink-soft);
+            animation: blink 0.8s steps(2, start) infinite;
+        }
+
+        /* Scene 3 */
+        #scene3_logo {
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(120deg, rgba(30, 7, 23, 0.98), rgba(3, 2, 4, 0.97));
+        }
+
+        .marvel-bg {
+            position: absolute;
+            inset: 0;
+        }
+
+        .flash-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.1s linear;
+            filter: brightness(0.68) saturate(1.06);
+        }
+
+        .flash-image.show {
+            opacity: 0.5;
+        }
+
+        .ibc-logo {
+            position: relative;
+            z-index: 2;
+            font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+            font-size: clamp(2.5rem, 12vw, 11rem);
+            letter-spacing: clamp(3px, 1vw, 14px);
+            background: linear-gradient(135deg, #fff2d2 0%, #ffd15e 35%, #c1821c 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 208, 90, 0.45), 0 0 50px rgba(194, 77, 37, 0.45);
+            border: 2px solid rgba(255, 210, 120, 0.65);
+            padding: 0.08em 0.18em;
+            box-shadow: inset 0 0 12px rgba(255, 210, 100, 0.35), 0 0 22px rgba(255, 138, 61, 0.45);
+            animation: fadeInUp 0.9s ease forwards;
+        }
+
+        #scene3_logo.fade-out {
+            opacity: 0;
+            transition: opacity 0.9s ease;
+        }
+
+        /* Scene 4 */
+        #scene4_form {
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(58, 20, 73, 0.5), rgba(10, 7, 16, 0.25) 35%),
+                radial-gradient(circle at 80% 80%, rgba(204, 123, 164, 0.16), rgba(10, 8, 16, 0.12) 40%),
+                linear-gradient(160deg, #0b0712, #040406 55%, #10050f);
+            padding: 20px;
+        }
+
+        .form-card {
+            width: 92vw;
+            border-radius: 20px;
+            background: linear-gradient(150deg, rgba(16, 11, 24, 0.86), rgba(14, 8, 20, 0.7));
+            border: 1px solid rgba(255, 176, 215, 0.32);
+            box-shadow: 0 0 28px rgba(255, 128, 206, 0.2), 0 22px 44px rgba(0, 0, 0, 0.52);
+            padding: 4vw;
+            animation: fadeInUp 0.8s ease;
+            max-height: 82dvh;
+            overflow-y: auto;
+        }
+
+        .form-message {
+            text-align: center;
+            font-size: clamp(1rem, 2.4vw, 1.5rem);
+            line-height: 1.75;
+            color: #ffe6f5;
+            text-shadow: 0 0 16px rgba(255, 145, 214, 0.32);
+            margin-bottom: 24px;
+        }
+
+        .choice-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 4vw;
+            transition: all 0.3s ease;
+        }
+
+        .choice-buttons.hidden {
+            display: none;
+        }
+
+        .choice-button {
+            font-size: 5vw;
+            padding: 3vh 6vw;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            border: none;
+            transform-origin: center;
+            min-width: 34vw;
+        }
+
+        #btnOkie {
+            color: #2e0920;
+            background: linear-gradient(135deg, #ffd7ef 0%, #ff9dda 45%, #f46db9 100%);
+            box-shadow: 0 0 18px rgba(255, 125, 211, 0.7), 0 8px 16px rgba(255, 125, 211, 0.3);
+        }
+
+        #btnOkie:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 22px rgba(255, 125, 211, 0.86), 0 12px 20px rgba(255, 125, 211, 0.4);
+        }
+
+        #btnKo {
+            color: #ffe8f9;
+            background: rgba(33, 20, 43, 0.95);
+            border: 1px solid rgba(255, 177, 227, 0.45);
+        }
+
+        .reaction-area {
+            margin-top: 18px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .reaction-area.show {
+            display: flex;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .reaction-image,
+        .heart-image {
+            width: 108px;
+            height: 108px;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 178, 226, 0.46);
+            box-shadow: 0 0 16px rgba(255, 125, 211, 0.35);
+        }
+
+        .speech-bubble {
+            max-width: 260px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(38, 15, 47, 0.92);
+            border: 1px solid rgba(255, 170, 220, 0.45);
+            box-shadow: 0 0 12px rgba(255, 125, 211, 0.2);
+        }
+
+        .name-input-area {
+            margin-top: 20px;
+            display: none;
+            gap: 14px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+        }
+
+        .name-input-area.show {
+            display: flex;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .name-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 3vw;
+            width: 100%;
+        }
+
+        .name-input {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 179, 225, 0.45);
+            padding: 1.7vh 3.4vw;
+            background: rgba(9, 6, 14, 0.75);
+            color: #fff3fb;
+            font-size: 4.2vw;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .confirm-btn {
+            border: none;
+            border-radius: 12px;
+            padding: 1.8vh 4vw;
+            font-weight: 700;
+            font-size: 4.4vw;
+            color: #2b1300;
+            background: linear-gradient(135deg, var(--gold-1) 0%, #f7b85d 42%, var(--gold-2) 100%);
+            box-shadow: 0 8px 18px rgba(212, 144, 68, 0.35);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .result-text {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 0.95rem;
+            min-height: 1.2em;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .result-text.show {
+            opacity: 1;
+        }
+
+        .heart {
+            position: fixed;
+            top: -10px;
+            font-size: 24px;
+            animation: fall linear forwards;
+            pointer-events: none;
+            z-index: 999;
+            filter: drop-shadow(0 0 8px rgba(255, 128, 210, 0.85));
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh);
+            }
+        }
+
+        @keyframes starsDrift {
+            from { transform: translateY(0); }
+            to { transform: translateY(-36px); }
+        }
+
+        @keyframes particleDrop {
+            0% { transform: translate3d(0, -10vh, 0); opacity: 0; }
+            12% { opacity: 1; }
+            100% { transform: translate3d(var(--x, 0px), 110vh, 0); opacity: 0; }
+        }
+
+        @keyframes blink {
+            0%, 48% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes cameraShake {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-1px, 1px); }
+            40% { transform: translate(1px, -1px); }
+            60% { transform: translate(-1px, -1px); }
+            80% { transform: translate(1px, 1px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes shimmerText {
+            from { background-position: -120% 0; }
+            to { background-position: 120% 0; }
+        }
+
+        @media (min-width: 431px) {
+            :root {
+                --zoom-scale: 5.6;
+            }
+
+            .space-title {
+                font-size: 1.15rem;
+                letter-spacing: 2px;
+            }
+
+            .intro-text {
+                font-size: clamp(1.55rem, 3.5vw, 2.5rem);
+            }
+
+            .choice-button {
+                font-size: clamp(1rem, 2.2vw, 1.3rem);
+                min-width: 140px;
+            }
+
+            .name-input,
+            .confirm-btn {
+                font-size: clamp(0.95rem, 2vw, 1.05rem);
+            }
+
+            .unlock-slider-bar {
+                height: 74px;
+            }
+
+            .unlock-handle {
+                width: 74px;
+                height: 74px;
+            }
+
+            .unlock-text {
+                line-height: 74px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="unlock-screen">
+        <div class="unlock-slider-bar" id="unlockBar">
+            <div class="unlock-handle" id="unlockHandle">&#10140;</div>
+            <div class="unlock-text">Trượt để mở khóa</div>
+        </div>
+    </div>
+
+    <div id="scene1_space" class="scene">
+        <div class="stars"></div>
+        <div class="particle-layer" id="particleLayer"></div>
+        <div class="space-title">Từ vũ trụ... rơi về nơi thanh xuân IBC02</div>
+
+        <div class="image-frame">
+            <div class="zoom-stage" id="zoomStage">
+            <!-- Placeholder image for layout preview -->
+            <div class="zoom-layer" data-step="0">
+                <img src="https://picsum.photos/seed/space-placeholder/1600/900" alt="Space" />
+                <div class="label">Outer Space</div>
+            </div>
+            <!-- Placeholder image for layout preview -->
+            <div class="zoom-layer" data-step="1">
+                <img src="https://picsum.photos/seed/earth-placeholder/1600/900" alt="Earth" />
+                <div class="label">Earth</div>
+            </div>
+            <!-- Placeholder image for layout preview -->
+            <div class="zoom-layer" data-step="2">
+                <img src="https://picsum.photos/seed/vietnam-placeholder/1600/900" alt="Vietnam" />
+                <div class="label">Vietnam</div>
+            </div>
+            <!-- Placeholder image for layout preview -->
+            <div class="zoom-layer" data-step="3">
+                <img src="https://picsum.photos/seed/hcm-placeholder/1600/900" alt="Ho Chi Minh City" />
+                <div class="label">Ho Chi Minh City</div>
+            </div>
+            <!-- Placeholder image for layout preview -->
+            <div class="zoom-layer" data-step="4">
+                <img src="https://picsum.photos/seed/ueh-placeholder/1600/900" alt="UEH" />
+                <div class="label">UEH</div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="scene2_text" class="scene">
+        <div class="intro-text" id="typewriterText">
+            30 người - 22 đóa hồng - 8 anh trai<br>
+            4 năm đại học - 1 lớp học
+        </div>
+    </div>
+
+    <div id="scene3_logo" class="scene">
+        <div class="marvel-bg" id="marvelBg"></div>
+        <div class="ibc-logo">IBC02</div>
+    </div>
+
+    <div id="scene4_form" class="scene">
+        <div class="form-card">
+            <p class="form-message">
+                Chào đóa hồng IBC02,<br />
+                không biết liệu mình có thể có được info của bạn được không?<br />
+                (Cảm phiền bạn ghi đầy đủ họ tên ạ)
+            </p>
+
+            <div id="choiceButtons" class="choice-buttons">
+                <button id="btnOkie" class="choice-button" type="button">OKIE</button>
+                <button id="btnKo" class="choice-button" type="button">KO</button>
+            </div>
+
+            <div id="reactionArea" class="reaction-area">
+                <!-- Placeholder image for layout preview -->
+                <img id="reactionImage" class="reaction-image" src="https://picsum.photos/seed/buon-placeholder-1/320/320" alt="Reaction" />
+                <div id="speechBubble" class="speech-bubble">Bạn đồng ý đi mà 🥺</div>
+            </div>
+
+            <div id="nameInputArea" class="name-input-area">
+                <!-- Placeholder image for layout preview -->
+                <img id="happyImage" class="heart-image" src="https://picsum.photos/seed/vui-placeholder-1/320/320" alt="Happy reaction" />
+                <div class="name-controls">
+                    <input id="nameInput" class="name-input" type="text" placeholder="Nhập họ và tên của bạn..." />
+                    <button id="confirmBtn" class="confirm-btn" type="button">Xác nhận</button>
+                </div>
+            </div>
+
+            <p id="resultText" class="result-text"></p>
+        </div>
+    </div>
+
+    <script>
+        let selectedName = "";
+        let heartRainTimer = null;
+
+        const scenes = {
+            scene1: document.getElementById("scene1_space"),
+            scene2: document.getElementById("scene2_text"),
+            scene3: document.getElementById("scene3_logo"),
+            scene4: document.getElementById("scene4_form")
+        };
+
+        function showScene(sceneId) {
+            Object.values(scenes).forEach((scene) => scene.classList.remove("active"));
+            document.getElementById(sceneId).classList.add("active");
+        }
+
+        function createParticles() {
+            const layer = document.getElementById("particleLayer");
+            for (let i = 0; i < 34; i++) {
+                const p = document.createElement("span");
+                p.className = "particle";
+                p.style.left = `${Math.random() * 100}%`;
+                p.style.top = `${Math.random() * 100}%`;
+                p.style.animationDelay = `${Math.random() * 4}s`;
+                p.style.animationDuration = `${3 + Math.random() * 2}s`;
+                p.style.setProperty("--x", `${-40 + Math.random() * 80}px`);
+                layer.appendChild(p);
+            }
+        }
+
+        function runScene1() {
+            const layers = Array.from(document.querySelectorAll(".zoom-layer"));
+            const stage = document.getElementById("zoomStage");
+            const stageDuration = 1500;
+            let index = 0;
+
+            function playNext() {
+                if (index > 0) {
+                    layers[index - 1].classList.add("fade");
+                }
+
+                if (index < layers.length) {
+                    const current = layers[index];
+                    current.classList.add("active");
+                    stage.classList.add("camera-shake");
+                    requestAnimationFrame(() => current.classList.add("zooming"));
+                    setTimeout(() => stage.classList.remove("camera-shake"), stageDuration - 100);
+                    index += 1;
+                    setTimeout(playNext, stageDuration);
+                    return;
+                }
+
+                setTimeout(() => {
+                    showScene("scene2_text");
+                    runScene2();
+                }, 450);
+            }
+
+            playNext();
+        }
+
+        function runScene2() {
+            const textEl = document.getElementById("typewriterText");
+            const fullText = "30 người - 22 đóa hồng - 8 anh trai\n4 năm đại học - 1 lớp học";
+            const normalized = fullText.normalize("NFC");
+            const segments = (typeof Intl !== "undefined" && Intl.Segmenter)
+                ? Array.from(new Intl.Segmenter("vi", { granularity: "grapheme" }).segment(normalized), (s) => s.segment)
+                : Array.from(normalized);
+
+            textEl.innerHTML = '<span id="typedText"></span><span class="cursor" id="typedCursor"></span>';
+            const typedText = document.getElementById("typedText");
+            const typedCursor = document.getElementById("typedCursor");
+
+            let i = 0;
+            const timer = setInterval(() => {
+                const ch = segments[i];
+                if (ch === "\n") {
+                    typedText.innerHTML += "<br>";
+                } else {
+                    typedText.innerHTML += ch;
+                }
+
+                i += 1;
+                if (i >= segments.length) {
+                    clearInterval(timer);
+                    typedCursor.style.opacity = "0";
+                    setTimeout(() => {
+                        showScene("scene3_logo");
+                        runScene3();
+                    }, 1300);
+                }
+            }, 75);
+        }
+
+        function setupMarvelFrames() {
+            const bg = document.getElementById("marvelBg");
+            const urls = Array.from({ length: 20 }, (_, i) => `https://picsum.photos/seed/img${i + 1}/1400/900`);
+            urls.forEach((url, i) => {
+                const img = document.createElement("img");
+                img.className = "flash-image";
+                img.src = url;
+                img.alt = `Flash frame ${i + 1}`;
+                bg.appendChild(img);
+            });
+        }
+
+        function runScene3() {
+            const scene = document.getElementById("scene3_logo");
+            const frames = Array.from(document.querySelectorAll(".flash-image"));
+            let idx = 0;
+
+            const timer = setInterval(() => {
+                frames.forEach((f) => f.classList.remove("show"));
+                frames[idx].classList.add("show");
+                idx = (idx + 1) % frames.length;
+            }, 100);
+
+            setTimeout(() => {
+                clearInterval(timer);
+                scene.classList.add("fade-out");
+                setTimeout(() => {
+                    scene.classList.remove("fade-out");
+                    showScene("scene4_form");
+                }, 850);
+            }, 3000);
+        }
+
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            heart.innerHTML = "❤️";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        function startHeartRain() {
+            if (heartRainTimer) {
+                return;
+            }
+            heartRainTimer = setInterval(createHeart, 200);
+        }
+
+        function setupScene4Form() {
+            let koScale = 1;
+
+            // Placeholder image for layout preview
+            const happyImages = [
+                "https://picsum.photos/seed/vui-placeholder-1/320/320",
+                "https://picsum.photos/seed/vui-placeholder-2/320/320",
+                "https://picsum.photos/seed/vui-placeholder-3/320/320",
+                "https://picsum.photos/seed/vui-placeholder-4/320/320",
+                "https://picsum.photos/seed/vui-placeholder-5/320/320"
+            ];
+
+            // Placeholder image for layout preview
+            const sadImages = [
+                "https://picsum.photos/seed/buon-placeholder-1/320/320",
+                "https://picsum.photos/seed/buon-placeholder-2/320/320",
+                "https://picsum.photos/seed/buon-placeholder-3/320/320",
+                "https://picsum.photos/seed/buon-placeholder-4/320/320",
+                "https://picsum.photos/seed/buon-placeholder-5/320/320"
+            ];
+
+            function getRandomImage(list) {
+                return list[Math.floor(Math.random() * list.length)];
+            }
+
+            const choiceButtons = document.getElementById("choiceButtons");
+            const reactionArea = document.getElementById("reactionArea");
+            const reactionImage = document.getElementById("reactionImage");
+            const speechBubble = document.getElementById("speechBubble");
+            const nameInputArea = document.getElementById("nameInputArea");
+            const happyImage = document.getElementById("happyImage");
+            const btnOkie = document.getElementById("btnOkie");
+            const btnKo = document.getElementById("btnKo");
+            const nameInput = document.getElementById("nameInput");
+            const confirmBtn = document.getElementById("confirmBtn");
+            const resultText = document.getElementById("resultText");
+
+            btnKo.addEventListener("click", () => {
+                koScale -= 0.15;
+                btnKo.style.transform = `scale(${Math.max(koScale, 0.2)})`;
+                reactionImage.src = getRandomImage(sadImages);
+                speechBubble.textContent = "Bạn đồng ý đi mà 🥺";
+                reactionArea.classList.add("show");
+                choiceButtons.classList.remove("hidden");
+                nameInputArea.classList.remove("show");
+            });
+
+            btnOkie.addEventListener("click", () => {
+                const happySrc = getRandomImage(happyImages);
+                reactionImage.src = happySrc;
+                happyImage.src = happySrc;
+                reactionArea.classList.remove("show");
+                choiceButtons.classList.add("hidden");
+                nameInputArea.classList.add("show");
+                startHeartRain();
+                nameInput.focus();
+            });
+
+            confirmBtn.addEventListener("click", () => {
+                const fullName = nameInput.value.trim();
+                if (!fullName) {
+                    resultText.textContent = "Bạn vui lòng nhập đầy đủ họ và tên nhé.";
+                    resultText.classList.add("show");
+                    return;
+                }
+                selectedName = fullName;
+                resultText.textContent = `Cảm ơn ${selectedName}. Dữ liệu đã được lưu cho cảnh tiếp theo.`;
+                resultText.classList.add("show");
+            });
+        }
+
+        function setupUnlockScreen() {
+            const unlockScreen = document.getElementById("unlock-screen");
+            const bar = document.getElementById("unlockBar");
+            const handle = document.getElementById("unlockHandle");
+
+            let dragging = false;
+            let startX = 0;
+            let startLeft = 0;
+            let unlocked = false;
+
+            const getMaxLeft = () => bar.clientWidth - handle.clientWidth;
+
+            const pointerDown = (clientX) => {
+                if (unlocked) {
+                    return;
+                }
+                dragging = true;
+                startX = clientX;
+                startLeft = parseFloat(handle.style.left || "0");
+                handle.style.transition = "none";
+            };
+
+            const pointerMove = (clientX) => {
+                if (!dragging || unlocked) {
+                    return;
+                }
+                const maxLeft = getMaxLeft();
+                const delta = clientX - startX;
+                const nextLeft = Math.min(maxLeft, Math.max(0, startLeft + delta));
+                handle.style.left = `${nextLeft}px`;
+            };
+
+            const pointerUp = () => {
+                if (!dragging || unlocked) {
+                    return;
+                }
+                dragging = false;
+
+                const maxLeft = getMaxLeft();
+                const currentLeft = parseFloat(handle.style.left || "0");
+                const threshold = maxLeft * 0.9;
+
+                handle.style.transition = "left 0.25s ease";
+
+                if (currentLeft >= threshold) {
+                    unlocked = true;
+                    handle.style.left = `${maxLeft}px`;
+
+                    setTimeout(() => {
+                        unlockScreen.classList.add("unlocked");
+                        showScene("scene1_space");
+                        runScene1();
+                    }, 180);
+
+                    setTimeout(() => {
+                        unlockScreen.style.display = "none";
+                    }, 900);
+                } else {
+                    handle.style.left = "0px";
+                }
+            };
+
+            handle.addEventListener("touchstart", (e) => {
+                pointerDown(e.touches[0].clientX);
+            }, { passive: true });
+
+            window.addEventListener("touchmove", (e) => {
+                pointerMove(e.touches[0].clientX);
+            }, { passive: true });
+
+            window.addEventListener("touchend", pointerUp);
+
+            handle.addEventListener("mousedown", (e) => {
+                e.preventDefault();
+                pointerDown(e.clientX);
+            });
+
+            window.addEventListener("mousemove", (e) => {
+                pointerMove(e.clientX);
+            });
+
+            window.addEventListener("mouseup", pointerUp);
+        }
+
+        createParticles();
+        setupMarvelFrames();
+        setupScene4Form();
+        setupUnlockScreen();
+    </script>
+</body>
+</html>
