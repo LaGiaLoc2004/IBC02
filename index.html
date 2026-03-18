@@ -1,0 +1,4493 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IBC02 - International Women's Day</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --text-light: #f8f6ff;
+            --pink-soft: #f5b2d7;
+            --pink-glow: #ff8fd1;
+            --gold-1: #ffe29f;
+            --gold-2: #de8a45;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overflow-x: hidden;
+            font-family: "Be Vietnam Pro", "Noto Sans", Arial, sans-serif;
+            color: var(--text-light);
+            background: radial-gradient(circle at 30% 20%, #27133f 0%, #09090f 40%, #030304 100%);
+        }
+
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        .scene {
+            position: fixed;
+            inset: 0;
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+            overflow: hidden;
+            width: 100vw;
+            min-height: 100dvh;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        .scene.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Film Scene */
+        #film-scene {
+            --film-frame-height: 70vh;
+            --film-frame-width: min(85vw, 52vh);
+            --film-gap: clamp(10px, 1.8vw, 15px);
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 50% 38%, rgba(255, 180, 112, 0.16), transparent 22%),
+                radial-gradient(circle at 18% 18%, rgba(255, 130, 203, 0.12), transparent 28%),
+                radial-gradient(circle at 82% 72%, rgba(92, 149, 255, 0.14), transparent 26%),
+                linear-gradient(180deg, #05050a 0%, #080a12 48%, #040407 100%);
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+        }
+
+        #film-scene::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(4, 4, 10, 0.92) 0%, rgba(4, 4, 10, 0.18) 28%, rgba(4, 4, 10, 0.18) 72%, rgba(4, 4, 10, 0.92) 100%),
+                radial-gradient(circle at center, rgba(255, 255, 255, 0.04), transparent 48%);
+            pointer-events: none;
+        }
+
+        #film-scene::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(4, 4, 8, 0.96) 0%, rgba(4, 4, 8, 0.2) 12%, rgba(4, 4, 8, 0.2) 88%, rgba(4, 4, 8, 0.96) 100%);
+            opacity: 0.92;
+            pointer-events: none;
+            transition: opacity 0.45s ease;
+        }
+
+        #film-scene.is-ending::after {
+            opacity: 0.38;
+        }
+
+        .film-stage {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: min(80vh, 760px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(18px) scale(0.985);
+            opacity: 0;
+            transition: opacity 0.55s ease, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            contain: layout paint;
+        }
+
+        #film-scene.active .film-stage {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        #film-scene.is-ending .film-stage {
+            opacity: 0.08;
+            transform: scale(0.992);
+        }
+
+        .film-strip-shell {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            overflow: hidden;
+            mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.92) 10%, rgba(0, 0, 0, 0.98) 90%, transparent 100%);
+            -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.92) 10%, rgba(0, 0, 0, 0.98) 90%, transparent 100%);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        #film-scene.is-ending .film-strip-shell {
+            opacity: 0;
+            transform: scale(0.992);
+        }
+
+        .film-strip {
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex: 0 0 auto;
+            min-width: max-content;
+            gap: var(--film-gap);
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .reel {
+            will-change: transform;
+        }
+
+        .film-strip-item {
+            position: relative;
+            flex: 0 0 auto;
+            width: var(--film-frame-width);
+            max-width: 85vw;
+            height: var(--film-frame-height);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 248, 253, 0.04);
+            box-shadow:
+                0 22px 52px rgba(0, 0, 0, 0.38),
+                0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+                0 0 24px rgba(255, 178, 111, 0.08);
+            transform: translate3d(0, 0, 0);
+        }
+
+        .film-strip-item::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, transparent 22%, transparent 74%, rgba(0, 0, 0, 0.26) 100%),
+                linear-gradient(135deg, transparent 0%, transparent 62%, rgba(255, 219, 170, 0.12) 100%);
+            pointer-events: none;
+        }
+
+        .film-strip-item img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            user-select: none;
+            transform: translateZ(0);
+            -webkit-user-drag: none;
+        }
+
+        .film-loading,
+        .film-caption {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, 10px);
+            width: min(88vw, 360px);
+            padding: 12px 18px;
+            border-radius: 999px;
+            text-align: center;
+            color: rgba(255, 236, 247, 0.98);
+            background: rgba(16, 10, 24, 0.62);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+            text-shadow: 0 0 18px rgba(255, 125, 211, 0.38);
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.32s ease, transform 0.32s ease;
+        }
+
+        .film-loading {
+            top: calc(env(safe-area-inset-top) + 22px);
+            font-size: clamp(0.92rem, 3.6vw, 1.08rem);
+            letter-spacing: 0.02em;
+        }
+
+        .film-caption {
+            top: calc(env(safe-area-inset-top) + 22px);
+            bottom: auto;
+            font-size: clamp(0.9rem, 3.3vw, 1.04rem);
+        }
+
+        .film-loading.show,
+        .film-caption.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        @media (hover: none) and (pointer: coarse), (max-width: 768px) {
+            .film-strip-shell {
+                mask-image: none;
+                -webkit-mask-image: none;
+            }
+
+            .film-strip {
+                backface-visibility: visible;
+                transform-style: flat;
+            }
+
+            .film-strip-item {
+                box-shadow:
+                    0 16px 36px rgba(0, 0, 0, 0.26),
+                    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+            }
+
+            .comment-card,
+            .comment-card.show,
+            .center-avatar,
+            .center-avatar.show {
+                filter: none;
+            }
+
+            .comment-card {
+                transition: opacity 0.58s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.58s cubic-bezier(0.2, 0.8, 0.2, 1);
+            }
+
+            .center-avatar {
+                transition: opacity 0.58s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.58s cubic-bezier(0.2, 0.8, 0.2, 1);
+            }
+        }
+
+        /* Comment Scene */
+        #comment-scene {
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 200, 230, 0.16), transparent 38%),
+                radial-gradient(circle at 80% 78%, rgba(255, 150, 210, 0.14), transparent 40%),
+                linear-gradient(160deg, #09070f 0%, #130a1e 55%, #1b0f24 100%);
+            padding: 14px;
+        }
+
+        .comment-stage {
+            width: min(96vw, 760px);
+            max-height: 92dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comment-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-areas:
+                ". top ."
+                "leftTop . rightTop"
+                "leftMid avatar rightMid"
+                "leftBottom . rightBottom"
+                ". bottom .";
+            gap: 10px;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .comment-cell {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 88px;
+        }
+
+        .slot-top { grid-area: top; }
+        .slot-left-top { grid-area: leftTop; }
+        .slot-right-top { grid-area: rightTop; }
+        .slot-left-mid { grid-area: leftMid; }
+        .slot-right-mid { grid-area: rightMid; }
+        .slot-left-bottom { grid-area: leftBottom; }
+        .slot-right-bottom { grid-area: rightBottom; }
+        .slot-bottom { grid-area: bottom; }
+        .slot-avatar { grid-area: avatar; }
+
+        .comment-card {
+            width: min(100%, 200px);
+            background: rgba(255, 245, 251, 0.94);
+            color: #3a1530;
+            border-radius: 14px;
+            padding: 10px 10px 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(16px) scale(0.92);
+            filter: blur(7px);
+            transition: opacity 0.68s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.68s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.68s ease;
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        .comment-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        .comment-text {
+            font-size: clamp(0.72rem, 2.2vw, 0.95rem);
+            line-height: 1.4;
+        }
+
+        .comment-author {
+            margin-top: 6px;
+            font-size: clamp(0.66rem, 2vw, 0.86rem);
+            font-weight: 700;
+            color: #8e2b69;
+        }
+
+        .center-avatar-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-avatar {
+            width: clamp(120px, 32vw, 160px);
+            height: clamp(120px, 32vw, 160px);
+            border-radius: 999px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 196, 235, 0.9);
+            box-shadow: 0 0 22px rgba(255, 128, 210, 0.45), 0 10px 18px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: scale(0.8) translateY(8px);
+            filter: blur(4px);
+            transition: opacity 0.65s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.65s ease;
+        }
+
+        .center-avatar.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
+            animation: avatarGlow 2.4s ease-in-out infinite;
+        }
+
+        .comment-final {
+            text-align: center;
+            font-size: clamp(0.88rem, 2.7vw, 1.1rem);
+            color: #ffe8f6;
+            text-shadow: 0 0 10px rgba(255, 140, 214, 0.5);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .comment-final.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .comment-heart {
+            display: inline-block;
+            margin-left: 6px;
+            animation: tinyHeartPulse 1.1s ease-in-out infinite;
+        }
+
+        /* Blind Pack Scene */
+        #blind-pack-scene {
+            --blind-pack-image: none;
+            --blind-card-back: none;
+            --blind-card-width: min(220px, 54vw);
+            --blind-card-height: calc(var(--blind-card-width) * 1.3636);
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 50% 22%, rgba(255, 194, 98, 0.18), transparent 22%),
+                radial-gradient(circle at 20% 16%, rgba(255, 136, 201, 0.16), transparent 26%),
+                radial-gradient(circle at 82% 72%, rgba(88, 160, 255, 0.16), transparent 26%),
+                linear-gradient(180deg, #09050a 0%, #120810 36%, #06070d 100%);
+            z-index: 1300;
+        }
+
+        #blind-pack-scene::before,
+        #blind-pack-scene::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        #blind-pack-scene::before {
+            background:
+                linear-gradient(180deg, rgba(6, 6, 10, 0.94) 0%, rgba(6, 6, 10, 0.14) 24%, rgba(6, 6, 10, 0.18) 76%, rgba(6, 6, 10, 0.92) 100%);
+            z-index: 0;
+        }
+
+        #blind-pack-scene::after {
+            background:
+                radial-gradient(circle at center, rgba(255, 255, 255, 0.05), transparent 44%);
+            z-index: 0;
+        }
+
+        .blind-pack-fx {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .blind-pack-topbar {
+            position: absolute;
+            top: calc(env(safe-area-inset-top) + 18px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(92vw, 420px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 3;
+        }
+
+        .blind-pack-scene-title,
+        .blind-pack-progress {
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(17, 10, 20, 0.68);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+            text-align: center;
+        }
+
+        .blind-pack-scene-title {
+            font-size: clamp(0.88rem, 3.4vw, 1.02rem);
+            letter-spacing: 0.16em;
+            font-weight: 700;
+            color: rgba(255, 232, 241, 0.94);
+        }
+
+        .blind-pack-progress {
+            font-size: clamp(0.84rem, 3vw, 0.96rem);
+            color: rgba(255, 226, 239, 0.92);
+            min-width: 126px;
+        }
+
+        .blind-pack-stage {
+            position: relative;
+            z-index: 2;
+            width: min(100vw, 520px);
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 0 108px;
+        }
+
+        .blind-pack-hero,
+        .blind-pack-deck-area {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate3d(-50%, -50%, 0);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: min(92vw, 420px);
+        }
+
+        .blind-pack-hero {
+            gap: 18px;
+            z-index: 3;
+            opacity: 1;
+            touch-action: manipulation;
+            transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .blind-pack-hero.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translate3d(-50%, calc(-50% - 24px), 0) scale(0.92);
+        }
+
+        .blind-pack-shell {
+            --pack-shift-x: 0px;
+            --pack-shift-y: 0px;
+            --pack-scale: 1;
+            --pack-rotate: 0deg;
+            --pack-closed-opacity: 1;
+            --pack-tear-opacity: 0;
+            --pack-tear-scale: 0.3;
+            --pack-flash-opacity: 0;
+            --pack-flash-scale: 0.4;
+            --pack-halves-opacity: 0;
+            --pack-left-x: 0px;
+            --pack-left-y: 0px;
+            --pack-left-rotate: 0deg;
+            --pack-right-x: 0px;
+            --pack-right-y: 0px;
+            --pack-right-rotate: 0deg;
+            position: relative;
+            width: min(64vw, 262px);
+            aspect-ratio: 0.74;
+            border: none;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+            transform: translate3d(var(--pack-shift-x), var(--pack-shift-y), 0) rotate(var(--pack-rotate)) scale(var(--pack-scale));
+            transform-origin: center center;
+            touch-action: manipulation;
+            z-index: 2;
+        }
+
+        .blind-pack-shell[aria-disabled="true"] {
+            cursor: wait;
+        }
+
+        .blind-pack-shell[aria-disabled="false"] {
+            animation: blindPackFloat 4.8s ease-in-out infinite;
+        }
+
+        .blind-pack-aura {
+            position: absolute;
+            inset: -14%;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at center, rgba(255, 218, 136, 0.38) 0%, rgba(255, 168, 111, 0.22) 22%, rgba(255, 110, 205, 0.12) 46%, rgba(255, 110, 205, 0) 72%);
+            filter: blur(10px);
+            animation: blindAuraPulse 2.8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .blind-pack-closed,
+        .blind-pack-half {
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 240, 199, 0.28);
+            box-shadow:
+                0 20px 42px rgba(0, 0, 0, 0.34),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+                0 0 30px rgba(255, 176, 84, 0.18);
+            overflow: hidden;
+            backface-visibility: hidden;
+        }
+
+        .blind-pack-closed {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            opacity: var(--pack-closed-opacity);
+            transition: opacity 0.18s linear;
+            user-select: none;
+            -webkit-user-drag: none;
+            background: linear-gradient(180deg, rgba(255, 201, 120, 0.38), rgba(166, 84, 29, 0.45));
+        }
+
+        .blind-pack-half {
+            opacity: var(--pack-halves-opacity);
+            background-image: var(--blind-pack-image);
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .blind-pack-half-left {
+            clip-path: polygon(0 0, 53% 0, 46% 100%, 0 100%);
+            transform: translate3d(var(--pack-left-x), var(--pack-left-y), 0) rotate(var(--pack-left-rotate));
+        }
+
+        .blind-pack-half-right {
+            clip-path: polygon(47% 0, 100% 0, 100% 100%, 54% 100%);
+            transform: translate3d(var(--pack-right-x), var(--pack-right-y), 0) rotate(var(--pack-right-rotate));
+        }
+
+        .blind-pack-tear {
+            position: absolute;
+            left: 15%;
+            right: 15%;
+            top: 13%;
+            height: 4px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(255, 240, 198, 0.06), rgba(255, 247, 234, 0.98), rgba(255, 240, 198, 0.08));
+            opacity: var(--pack-tear-opacity);
+            transform: scaleX(var(--pack-tear-scale));
+            box-shadow: 0 0 14px rgba(255, 238, 190, 0.8);
+        }
+
+        .blind-pack-flash {
+            position: absolute;
+            inset: 16%;
+            border-radius: 50%;
+            opacity: var(--pack-flash-opacity);
+            transform: scale(var(--pack-flash-scale));
+            background:
+                radial-gradient(circle at center, rgba(255, 249, 237, 0.98) 0%, rgba(255, 226, 172, 0.86) 24%, rgba(255, 189, 95, 0.36) 46%, rgba(255, 189, 95, 0) 72%);
+            filter: blur(8px);
+            pointer-events: none;
+        }
+
+        .blind-pack-hint {
+            min-width: min(88vw, 280px);
+            padding: 12px 18px;
+            border-radius: 999px;
+            text-align: center;
+            font-size: clamp(0.9rem, 3.4vw, 1.02rem);
+            color: rgba(255, 239, 247, 0.96);
+            background: rgba(16, 9, 21, 0.68);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .blind-pack-deck-area {
+            gap: 18px;
+            z-index: 3;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate3d(-50%, calc(-50% + 18px), 0) scale(0.94);
+            transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .blind-pack-deck-area.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate3d(-50%, -50%, 0) scale(1);
+        }
+
+        .blind-pack-deck-area.show.is-resetting {
+            opacity: 0;
+            pointer-events: none;
+            transform: translate3d(-50%, calc(-50% + 14px), 0) scale(0.95);
+        }
+
+        .blind-pack-deck-glow {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: min(88vw, 360px);
+            height: min(88vw, 360px);
+            transform: translate3d(-50%, -50%, 0);
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at center, rgba(255, 229, 167, 0.24) 0%, rgba(255, 169, 122, 0.14) 24%, rgba(255, 102, 198, 0.08) 48%, transparent 72%);
+            filter: blur(12px);
+            pointer-events: none;
+        }
+
+        .blind-pack-deck {
+            position: relative;
+            width: min(92vw, 430px);
+            height: min(70dvh, 620px);
+            perspective: 1800px;
+            transform-style: preserve-3d;
+            touch-action: pan-y;
+            z-index: 2;
+            transition: width 0.42s ease, height 0.42s ease;
+        }
+
+        .blind-pack-deck.is-final-grid {
+            width: min(94vw, 430px);
+            height: min(74dvh, 660px);
+        }
+
+        .blind-card {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: var(--blind-card-width);
+            height: var(--blind-card-height);
+            margin-left: calc(var(--blind-card-width) / -2);
+            margin-top: calc(var(--blind-card-height) / -2);
+            transform-style: preserve-3d;
+            will-change: transform, opacity;
+            transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.32s ease;
+        }
+
+        .blind-card.is-gallery {
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: transform 0.76s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.34s ease;
+        }
+
+        .blind-card-inner {
+            position: absolute;
+            inset: 0;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.32s ease;
+        }
+
+        .blind-card.is-flipped .blind-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .blind-card.is-current .blind-card-inner {
+            box-shadow: 0 0 34px rgba(255, 186, 97, 0.22);
+        }
+
+        .blind-card.is-gallery .blind-card-inner {
+            box-shadow: 0 0 26px rgba(255, 189, 92, 0.18);
+        }
+
+        .blind-card-face {
+            position: absolute;
+            inset: 0;
+            border-radius: 22px;
+            overflow: hidden;
+            backface-visibility: hidden;
+            box-shadow:
+                0 16px 40px rgba(0, 0, 0, 0.34),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .blind-card-face::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 26%, transparent 72%, rgba(0, 0, 0, 0.22)),
+                linear-gradient(135deg, transparent 0%, transparent 62%, rgba(255, 219, 170, 0.12) 100%);
+            pointer-events: none;
+        }
+
+        .blind-card-back-face {
+            background-image: var(--blind-card-back);
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-color: #201629;
+        }
+
+        .blind-card-front-face {
+            transform: rotateY(180deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(8px, 2vw, 12px);
+            background: linear-gradient(180deg, rgba(255, 246, 252, 0.96), rgba(245, 235, 250, 0.92));
+        }
+
+        .blind-card-media {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .blind-card-media img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            transform: translateZ(0);
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .blind-card-media.is-portrait img,
+        .blind-card-media.is-square img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .blind-card-media.is-landscape img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            transform: rotate(90deg);
+            transform-origin: center center;
+        }
+
+        .blind-pack-deck-hint {
+            z-index: 2;
+        }
+
+        .blind-pack-reload-btn {
+            min-width: min(84vw, 240px);
+            padding: 12px 18px;
+            border: 1px solid rgba(255, 218, 196, 0.18);
+            border-radius: 999px;
+            background: rgba(20, 12, 26, 0.74);
+            color: rgba(255, 241, 247, 0.97);
+            font: inherit;
+            font-size: clamp(0.88rem, 3.3vw, 0.98rem);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
+            cursor: pointer;
+            transition: transform 0.28s ease, opacity 0.28s ease, background 0.28s ease, border-color 0.28s ease;
+            z-index: 2;
+            touch-action: manipulation;
+        }
+
+        .blind-pack-reload-btn:hover:not(:disabled),
+        .blind-pack-reload-btn:focus-visible:not(:disabled) {
+            transform: translate3d(0, -1px, 0);
+            background: rgba(28, 16, 32, 0.84);
+            border-color: rgba(255, 226, 204, 0.3);
+            outline: none;
+        }
+
+        .blind-pack-reload-btn:disabled {
+            opacity: 0.52;
+            cursor: wait;
+        }
+
+        .blind-pack-final {
+            position: absolute;
+            left: 50%;
+            bottom: calc(env(safe-area-inset-bottom) + 26px);
+            transform: translate3d(-50%, 18px, 0);
+            width: min(88vw, 360px);
+            padding: 14px 18px;
+            border-radius: 24px;
+            text-align: center;
+            font-size: clamp(0.96rem, 3.8vw, 1.12rem);
+            color: rgba(255, 241, 247, 0.98);
+            background: rgba(20, 10, 24, 0.72);
+            border: 1px solid rgba(255, 192, 214, 0.18);
+            box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28), 0 0 38px rgba(255, 124, 209, 0.12);
+            opacity: 0;
+            z-index: 3;
+            transition: opacity 0.42s ease, transform 0.42s ease, box-shadow 0.42s ease;
+        }
+
+        .blind-pack-final.show {
+            opacity: 1;
+            transform: translate3d(-50%, 0, 0);
+            box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28), 0 0 48px rgba(255, 124, 209, 0.24);
+            animation: blindFinalPulse 1.8s ease-in-out infinite;
+        }
+
+        .blind-pack-gallery {
+            position: absolute;
+            inset: 0;
+            z-index: 8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding:
+                calc(env(safe-area-inset-top) + 18px)
+                16px
+                calc(env(safe-area-inset-bottom) + 18px);
+            background: rgba(4, 4, 10, 0.86);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s ease;
+        }
+
+        .blind-pack-gallery.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .blind-pack-gallery-panel {
+            position: relative;
+            width: min(92vw, 430px);
+            height: min(78dvh, 740px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            transform: translate3d(0, 18px, 0) scale(0.96);
+            transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .blind-pack-gallery.show .blind-pack-gallery-panel {
+            transform: translate3d(0, 0, 0) scale(1);
+        }
+
+        .blind-pack-gallery-toolbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .blind-pack-gallery-label {
+            flex: 1;
+            min-width: 0;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(16, 10, 24, 0.76);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+            font-size: clamp(0.84rem, 3vw, 0.94rem);
+            color: rgba(255, 236, 245, 0.96);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .blind-pack-gallery-close {
+            flex: 0 0 auto;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255, 220, 203, 0.16);
+            border-radius: 999px;
+            background: rgba(16, 10, 24, 0.78);
+            color: rgba(255, 240, 247, 0.98);
+            font: inherit;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.24);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .blind-pack-gallery-viewport {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            overflow: hidden;
+            border-radius: 28px;
+            touch-action: pan-y;
+        }
+
+        .blind-pack-gallery-track {
+            width: 300%;
+            height: 100%;
+            display: flex;
+            transform: translate3d(-33.333333%, 0, 0);
+            will-change: transform;
+        }
+
+        .blind-pack-gallery-slide {
+            flex: 0 0 33.333333%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+        }
+
+        .blind-pack-gallery-card {
+            width: min(76vw, 320px);
+            height: min(calc(min(76vw, 320px) * 1.3333), 62dvh);
+            border-radius: 24px;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(255, 246, 252, 0.96), rgba(245, 235, 250, 0.92));
+            box-shadow:
+                0 20px 46px rgba(0, 0, 0, 0.34),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+                0 0 34px rgba(255, 182, 120, 0.12);
+            transition: transform 0.32s ease, box-shadow 0.32s ease;
+        }
+
+        .blind-pack-gallery-slide.is-current .blind-pack-gallery-card {
+            transform: scale(1.02);
+            box-shadow:
+                0 24px 54px rgba(0, 0, 0, 0.38),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+                0 0 42px rgba(255, 182, 120, 0.18);
+        }
+
+        .blind-pack-gallery-media {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .blind-pack-gallery.is-zoomed .blind-pack-gallery-slide.is-current .blind-pack-gallery-media {
+            transform: scale(1.82);
+        }
+
+        .blind-pack-gallery-media img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            user-select: none;
+            -webkit-user-drag: none;
+            transform: translateZ(0);
+        }
+
+        .blind-pack-gallery-media.is-portrait img,
+        .blind-pack-gallery-media.is-square img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .blind-pack-gallery-media.is-landscape img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transform: rotate(90deg) scale(0.92);
+            transform-origin: center center;
+        }
+
+        .blind-pack-gallery-hint {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(16, 10, 24, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: clamp(0.82rem, 3vw, 0.9rem);
+            color: rgba(255, 230, 242, 0.92);
+            text-align: center;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        /* Unlock Screen */
+        #unlock-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                linear-gradient(180deg, #5a5d62 0%, #35383d 33%, #1d2024 70%, #0f1114 100%);
+            overflow: hidden;
+            transition: opacity 0.65s ease;
+        }
+
+        #unlock-screen::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 12% 22%, rgba(255, 255, 255, 0.23) 0 2px, transparent 5px),
+                radial-gradient(circle at 22% 14%, rgba(255, 255, 255, 0.2) 0 1.8px, transparent 4px),
+                radial-gradient(circle at 35% 32%, rgba(255, 255, 255, 0.16) 0 2.2px, transparent 5px),
+                radial-gradient(circle at 48% 12%, rgba(255, 255, 255, 0.2) 0 1.5px, transparent 4px),
+                radial-gradient(circle at 62% 24%, rgba(255, 255, 255, 0.18) 0 2px, transparent 5px),
+                radial-gradient(circle at 76% 16%, rgba(255, 255, 255, 0.14) 0 1.8px, transparent 4px),
+                radial-gradient(circle at 88% 28%, rgba(255, 255, 255, 0.16) 0 2px, transparent 5px);
+            opacity: 0.35;
+            filter: blur(0.2px);
+            pointer-events: none;
+        }
+
+        #unlock-screen::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.32));
+            pointer-events: none;
+        }
+
+        #unlock-screen.unlocked {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .unlock-slider-bar {
+            width: 85vw;
+            max-width: 520px;
+            height: 70px;
+            border-radius: 35px;
+            background: linear-gradient(to bottom, #3b3b3b, #1c1c1c);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow:
+                inset 0 2px 6px rgba(255, 255, 255, 0.15),
+                inset 0 -3px 6px rgba(0, 0, 0, 0.45),
+                0 14px 24px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            z-index: 2;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .unlock-handle {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            background: linear-gradient(to bottom, #f2f2f2, #cfcfcf);
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #666;
+            box-shadow:
+                inset 0 2px 5px rgba(255, 255, 255, 0.8),
+                0 4px 8px rgba(0, 0, 0, 0.4);
+            transition: left 0.25s ease;
+            will-change: left;
+            z-index: 3;
+        }
+
+        .unlock-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 70px;
+            font-size: 20px;
+            letter-spacing: 2px;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.22) 0%,
+                rgba(255, 255, 255, 0.9) 48%,
+                rgba(255, 255, 255, 0.22) 100%
+            );
+            background-size: 220% 100%;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.32);
+            animation: shimmerText 2.2s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Scene 2 */
+        #scene2_text {
+            background:
+                radial-gradient(circle at 50% 38%, rgba(255, 151, 214, 0.18) 0%, rgba(255, 151, 214, 0) 42%),
+                linear-gradient(180deg, #09050d 0%, #020204 62%, #000 100%);
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 18px;
+        }
+
+        #scene2_text::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: min(82vw, 460px);
+            height: min(82vw, 460px);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 182, 225, 0.18) 0%, rgba(255, 182, 225, 0) 68%);
+            pointer-events: none;
+            filter: blur(16px);
+            opacity: 0.85;
+        }
+
+        .intro-text {
+            position: relative;
+            z-index: 1;
+            width: min(92vw, 560px);
+            font-size: 6vw;
+            line-height: 1.45;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 12px rgba(255, 145, 215, 0.85), 0 0 32px rgba(245, 178, 215, 0.35);
+            min-height: 3.3em;
+            margin: 0 auto;
+            text-align: center;
+            white-space: normal;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 0.08em;
+            height: 1em;
+            margin-left: 6px;
+            vertical-align: -0.12em;
+            background: var(--pink-soft);
+            animation: blink 0.8s steps(2, start) infinite;
+        }
+
+        /* Scene 3 */
+        #scene3_logo {
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(120deg, rgba(30, 7, 23, 0.98), rgba(3, 2, 4, 0.97));
+        }
+
+        .marvel-bg {
+            position: absolute;
+            inset: 0;
+        }
+
+        .flash-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.1s linear;
+            filter: brightness(0.68) saturate(1.06);
+        }
+
+        .flash-image.show {
+            opacity: 0.5;
+        }
+
+        .ibc-logo {
+            position: relative;
+            z-index: 2;
+            font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+            font-size: clamp(2.5rem, 12vw, 11rem);
+            letter-spacing: clamp(3px, 1vw, 14px);
+            background: linear-gradient(135deg, #fff2d2 0%, #ffd15e 35%, #c1821c 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 208, 90, 0.45), 0 0 50px rgba(194, 77, 37, 0.45);
+            border: 2px solid rgba(255, 210, 120, 0.65);
+            padding: 0.08em 0.18em;
+            box-shadow: inset 0 0 12px rgba(255, 210, 100, 0.35), 0 0 22px rgba(255, 138, 61, 0.45);
+            animation: fadeInUp 0.9s ease forwards;
+        }
+
+        #scene3_logo.fade-out {
+            opacity: 0;
+            transition: opacity 0.9s ease;
+        }
+
+        /* Scene 4 */
+        #scene4_form {
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(58, 20, 73, 0.5), rgba(10, 7, 16, 0.25) 35%),
+                radial-gradient(circle at 80% 80%, rgba(204, 123, 164, 0.16), rgba(10, 8, 16, 0.12) 40%),
+                linear-gradient(160deg, #0b0712, #040406 55%, #10050f);
+            padding: 20px;
+        }
+
+        .form-card {
+            width: 92vw;
+            border-radius: 20px;
+            background: linear-gradient(150deg, rgba(16, 11, 24, 0.86), rgba(14, 8, 20, 0.7));
+            border: 1px solid rgba(255, 176, 215, 0.32);
+            box-shadow: 0 0 28px rgba(255, 128, 206, 0.2), 0 22px 44px rgba(0, 0, 0, 0.52);
+            padding: 4vw;
+            animation: fadeInUp 0.8s ease;
+            max-height: 82dvh;
+            overflow-y: auto;
+        }
+
+        .form-message {
+            text-align: center;
+            font-size: clamp(1rem, 2.4vw, 1.5rem);
+            line-height: 1.75;
+            color: #ffe6f5;
+            text-shadow: 0 0 16px rgba(255, 145, 214, 0.32);
+            margin-bottom: 24px;
+        }
+
+        .choice-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 4vw;
+            transition: all 0.3s ease;
+        }
+
+        .choice-buttons.hidden {
+            display: none;
+        }
+
+        .choice-button {
+            font-size: 5vw;
+            padding: 3vh 6vw;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            border: none;
+            transform-origin: center;
+            min-width: 34vw;
+        }
+
+        #okBtn {
+            color: #2e0920;
+            background: linear-gradient(135deg, #ffd7ef 0%, #ff9dda 45%, #f46db9 100%);
+            box-shadow: 0 0 18px rgba(255, 125, 211, 0.7), 0 8px 16px rgba(255, 125, 211, 0.3);
+        }
+
+        #okBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 22px rgba(255, 125, 211, 0.86), 0 12px 20px rgba(255, 125, 211, 0.4);
+        }
+
+        #btnKo {
+            color: #ffe8f9;
+            background: rgba(33, 20, 43, 0.95);
+            border: 1px solid rgba(255, 177, 227, 0.45);
+        }
+
+        .reaction-area {
+            margin-top: 18px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .reaction-area.show {
+            display: flex;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .reaction-image,
+        .heart-image {
+            width: 108px;
+            height: 108px;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 178, 226, 0.46);
+            box-shadow: 0 0 16px rgba(255, 125, 211, 0.35);
+        }
+
+        .speech-bubble {
+            max-width: 260px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(38, 15, 47, 0.92);
+            border: 1px solid rgba(255, 170, 220, 0.45);
+            box-shadow: 0 0 12px rgba(255, 125, 211, 0.2);
+        }
+
+        .name-input-area {
+            margin-top: 20px;
+            display: none;
+            gap: 14px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+        }
+
+        .name-input-area.show {
+            display: flex;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .name-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 3vw;
+            width: 100%;
+        }
+
+        .name-input {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 179, 225, 0.45);
+            padding: 1.7vh 3.4vw;
+            background: rgba(9, 6, 14, 0.75);
+            color: #fff3fb;
+            font-size: 4.2vw;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .confirm-btn {
+            border: none;
+            border-radius: 12px;
+            padding: 1.8vh 4vw;
+            font-weight: 700;
+            font-size: 4.4vw;
+            color: #2b1300;
+            background: linear-gradient(135deg, var(--gold-1) 0%, #f7b85d 42%, var(--gold-2) 100%);
+            box-shadow: 0 8px 18px rgba(212, 144, 68, 0.35);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .result-text {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 0.95rem;
+            min-height: 1.2em;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .result-text.show {
+            opacity: 1;
+        }
+
+        .heart {
+            position: fixed;
+            top: -10px;
+            font-size: 24px;
+            animation: fall linear forwards;
+            pointer-events: none;
+            z-index: 999;
+            filter: drop-shadow(0 0 8px rgba(255, 128, 210, 0.85));
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh);
+            }
+        }
+
+        @keyframes blink {
+            0%, 48% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shimmerText {
+            from { background-position: -120% 0; }
+            to { background-position: 120% 0; }
+        }
+
+        @keyframes blindPackFloat {
+            0%, 100% {
+                transform: translate3d(var(--pack-shift-x), calc(var(--pack-shift-y) - 5px), 0) rotate(var(--pack-rotate)) scale(var(--pack-scale));
+            }
+            50% {
+                transform: translate3d(var(--pack-shift-x), calc(var(--pack-shift-y) + 6px), 0) rotate(var(--pack-rotate)) scale(var(--pack-scale));
+            }
+        }
+
+        @keyframes blindAuraPulse {
+            0%, 100% {
+                opacity: 0.78;
+                transform: scale(0.96);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.04);
+            }
+        }
+
+        @keyframes blindFinalPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 0 rgba(255, 136, 207, 0));
+            }
+            50% {
+                filter: drop-shadow(0 0 10px rgba(255, 136, 207, 0.24));
+            }
+        }
+
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 18px rgba(255, 125, 211, 0.42), 0 10px 18px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 150, 222, 0.72), 0 10px 18px rgba(0, 0, 0, 0.3); }
+        }
+
+        @keyframes tinyHeartPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(255, 125, 211, 0.4)); }
+            50% { transform: scale(1.18); filter: drop-shadow(0 0 8px rgba(255, 125, 211, 0.8)); }
+        }
+
+        @media (min-width: 431px) {
+            #film-scene {
+                --film-frame-width: min(82vw, 54vh);
+                --film-gap: clamp(10px, 1.6vw, 15px);
+            }
+
+            #blind-pack-scene {
+                --blind-card-width: min(220px, 32vw);
+            }
+
+            .intro-text {
+                font-size: clamp(1.55rem, 3.5vw, 2.5rem);
+            }
+
+            .choice-button {
+                font-size: clamp(1rem, 2.2vw, 1.3rem);
+                min-width: 140px;
+            }
+
+            .name-input,
+            .confirm-btn {
+                font-size: clamp(0.95rem, 2vw, 1.05rem);
+            }
+
+            .film-loading {
+                font-size: clamp(1rem, 2.4vw, 1.35rem);
+            }
+
+            .film-caption {
+                font-size: clamp(0.9rem, 2vw, 1.2rem);
+            }
+
+            .blind-pack-topbar {
+                gap: 12px;
+            }
+
+            .blind-pack-stage {
+                padding-top: 132px;
+                padding-bottom: 122px;
+            }
+
+            .blind-pack-shell {
+                width: min(248px, 36vw);
+            }
+
+            .blind-pack-hint {
+                min-width: 260px;
+            }
+
+            .comment-grid {
+                gap: 12px;
+            }
+
+            .comment-cell {
+                min-height: 94px;
+            }
+
+            .unlock-slider-bar {
+                height: 74px;
+            }
+
+            .unlock-handle {
+                width: 74px;
+                height: 74px;
+            }
+
+            .unlock-text {
+                line-height: 74px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            #film-scene {
+                --film-frame-height: min(68vh, 560px);
+                --film-frame-width: min(85vw, 72vw);
+                --film-gap: clamp(10px, 3.4vw, 14px);
+            }
+
+            #blind-pack-scene {
+                --blind-card-width: min(220px, 55vw);
+            }
+
+            .comment-stage {
+                width: 97vw;
+                gap: 10px;
+            }
+
+            .comment-grid {
+                gap: 7px;
+            }
+
+            .comment-cell {
+                min-height: 78px;
+            }
+
+            .comment-card {
+                width: min(100%, 165px);
+            }
+
+            .comment-card {
+                padding: 8px 8px 7px;
+                border-radius: 12px;
+            }
+
+            .blind-pack-topbar {
+                width: min(92vw, 360px);
+            }
+
+            .blind-pack-stage {
+                padding-top: 116px;
+                padding-bottom: 118px;
+            }
+
+            .blind-pack-shell {
+                width: min(68vw, 232px);
+            }
+
+            .blind-pack-deck {
+                height: min(64dvh, 560px);
+            }
+
+            .blind-pack-hint,
+            .blind-pack-final {
+                width: min(90vw, 330px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="unlock-screen">
+        <div class="unlock-slider-bar" id="unlockBar">
+            <div class="unlock-handle" id="unlockHandle">&#10140;</div>
+            <div class="unlock-text">Trượt để mở khóa</div>
+        </div>
+    </div>
+
+    <div id="scene2_text" class="scene">
+        <div class="intro-text" id="typewriterText" aria-live="polite"></div>
+    </div>
+
+    <div id="scene3_logo" class="scene">
+        <div class="marvel-bg" id="marvelBg"></div>
+        <div class="ibc-logo">IBC02</div>
+    </div>
+
+        <div id="film-scene" class="scene">
+            <div class="film-loading" id="filmLoading">Đang tua lại thanh xuân...</div>
+            <div class="film-stage" id="filmStage">
+                <div class="film-strip-shell">
+                    <div class="film-strip reel" id="filmStripTrack" aria-live="off"></div>
+                </div>
+            </div>
+            <div class="film-caption" id="filmCaption"></div>
+        </div>
+
+    <div id="comment-scene" class="scene">
+        <div class="comment-stage">
+            <div class="comment-grid">
+                <div class="comment-cell slot-top"><div class="comment-card" data-comment-card="0"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-left-top"><div class="comment-card" data-comment-card="1"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-right-top"><div class="comment-card" data-comment-card="2"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-left-mid"><div class="comment-card" data-comment-card="3"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-avatar center-avatar-wrap"><img id="commentGirlImage" class="center-avatar" src="" alt="Girl profile" /></div>
+                <div class="comment-cell slot-right-mid"><div class="comment-card" data-comment-card="4"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-left-bottom"><div class="comment-card" data-comment-card="5"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-right-bottom"><div class="comment-card" data-comment-card="6"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+                <div class="comment-cell slot-bottom"><div class="comment-card" data-comment-card="7"><div class="comment-text" data-comment-text></div><div class="comment-author" data-comment-author></div></div></div>
+            </div>
+
+            <div id="commentFinalText" class="comment-final">Cảm ơn vì đã là một phần của IBC02.<span class="comment-heart">❤️</span></div>
+        </div>
+    </div>
+
+    <div id="blind-pack-scene" class="scene">
+        <canvas id="blindPackFx" class="blind-pack-fx"></canvas>
+
+        <div class="blind-pack-topbar">
+            <div class="blind-pack-scene-title">BLIND PACK OPENING</div>
+            <div id="blindPackProgress" class="blind-pack-progress">Tấm 0 / 12</div>
+        </div>
+
+        <div id="blindPackStage" class="blind-pack-stage">
+            <div id="blindPackHero" class="blind-pack-hero">
+                <button id="blindPackShell" class="blind-pack-shell" type="button" aria-label="Mở túi quà" aria-disabled="true" data-locked="true">
+                    <div class="blind-pack-aura" aria-hidden="true"></div>
+                    <img id="blindPackClosed" class="blind-pack-closed" src="assets/ui/pack.png" alt="Mystery pack" />
+                    <div class="blind-pack-half blind-pack-half-left" aria-hidden="true"></div>
+                    <div class="blind-pack-half blind-pack-half-right" aria-hidden="true"></div>
+                    <div id="blindPackTear" class="blind-pack-tear" aria-hidden="true"></div>
+                    <div id="blindPackFlash" class="blind-pack-flash" aria-hidden="true"></div>
+                </button>
+                <div id="blindPackHint" class="blind-pack-hint">Chạm để mở túi quà</div>
+            </div>
+
+            <div id="blindDeckArea" class="blind-pack-deck-area">
+                <div class="blind-pack-deck-glow" aria-hidden="true"></div>
+                <div id="blindPackDeck" class="blind-pack-deck"></div>
+                <div id="blindDeckHint" class="blind-pack-hint blind-pack-deck-hint">Lướt để xem từng tấm</div>
+                <button id="blindPackReloadBtn" class="blind-pack-reload-btn" type="button">Mở lại túi khác</button>
+            </div>
+        </div>
+
+        <div id="blindPackFinalText" class="blind-pack-final">Đây là những kỷ niệm dành cho bạn ❤️</div>
+
+        <div id="blindPackGallery" class="blind-pack-gallery" hidden aria-hidden="true">
+            <div class="blind-pack-gallery-panel">
+                <div class="blind-pack-gallery-toolbar">
+                    <div id="blindPackGalleryLabel" class="blind-pack-gallery-label">IBC02 Memory</div>
+                    <button id="blindPackGalleryClose" class="blind-pack-gallery-close" type="button" aria-label="Đóng ảnh">×</button>
+                </div>
+                <div id="blindPackGalleryViewport" class="blind-pack-gallery-viewport">
+                    <div id="blindPackGalleryTrack" class="blind-pack-gallery-track">
+                        <div class="blind-pack-gallery-slide" data-gallery-slot="prev"></div>
+                        <div class="blind-pack-gallery-slide" data-gallery-slot="current"></div>
+                        <div class="blind-pack-gallery-slide" data-gallery-slot="next"></div>
+                    </div>
+                </div>
+                <div class="blind-pack-gallery-hint">Chạm để phóng to, vuốt trái hoặc phải để lướt ảnh</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="scene4_form" class="scene">
+        <div class="form-card">
+            <p class="form-message">
+                Chào đóa hồng IBC02,<br />
+                không biết liệu mình có thể có được info của bạn được không?<br />
+                (Cảm phiền bạn ghi đầy đủ họ tên ạ)
+            </p>
+
+            <div id="choiceButtons" class="choice-buttons">
+                <button id="okBtn" class="choice-button" type="button">OKIE</button>
+                <button id="btnKo" class="choice-button" type="button">KO</button>
+            </div>
+
+            <div id="reactionArea" class="reaction-area">
+                <!-- Placeholder image for layout preview -->
+                <img id="reactionImage" class="reaction-image" src="https://picsum.photos/seed/buon-placeholder-1/320/320" alt="Reaction" />
+                <div id="speechBubble" class="speech-bubble">Bạn đồng ý đi mà 🥺</div>
+            </div>
+
+            <div id="nameInputArea" class="name-input-area">
+                <!-- Placeholder image for layout preview -->
+                <img id="happyImage" class="heart-image" src="https://picsum.photos/seed/vui-placeholder-1/320/320" alt="Happy reaction" />
+                <div class="name-controls">
+                    <input id="nameInput" class="name-input" type="text" placeholder="Nhập họ và tên của bạn..." />
+                    <button id="confirmBtn" class="confirm-btn" type="button">Xác nhận</button>
+                </div>
+            </div>
+
+            <p id="resultText" class="result-text"></p>
+        </div>
+    </div>
+
+    <script>
+
+let selectedName = "";
+let selectedRose = null;
+let heartRainTimer = null;
+let filmAnimationFrame = null;
+let filmSceneTimer = null;
+let heartRainStopTimer = null;
+let scene2Timer = null;
+let scene2TypingTimer = null;
+let commentSceneTimerHandles = [];
+let blindPackAnimationFrame = null;
+let blindPackFxFrame = null;
+let blindPackFxContext = null;
+let blindPackFxLastTime = 0;
+let blindPackRunToken = 0;
+let blindPackLastInteractionAt = 0;
+let blindPackResizeScheduled = false;
+let blindPackLastPackSignature = "";
+
+const blindPackTimers = [];
+const blindPackParticles = [];
+const staticGalleryCache = new Map();
+const blindPackState = {
+    phase: "idle",
+    ready: false,
+    opening: false,
+    revealing: false,
+    reloading: false,
+    finished: false,
+    currentIndex: 0,
+    revealCardIndex: null,
+    revealedCount: 0,
+    cards: [],
+    touchStartX: 0,
+    touchStartY: 0,
+    touchMoved: false
+};
+const blindPackGalleryState = {
+    open: false,
+    activeIndex: 0,
+    zoomed: false,
+    navigating: false,
+    touchStartX: 0,
+    touchStartY: 0,
+    touchMoved: false,
+    ignoreClickUntil: 0
+};
+
+const scenes = {
+    scene2: document.getElementById("scene2_text"),
+    scene3: document.getElementById("scene3_logo"),
+    film: document.getElementById("film-scene"),
+    comment: document.getElementById("comment-scene"),
+    blindPack: document.getElementById("blind-pack-scene"),
+    scene4: document.getElementById("scene4_form")
+};
+
+function isLikelyMobileRuntime() {
+    try {
+        const coarsePointer = typeof window.matchMedia === "function"
+            && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+        const narrowViewport = Math.min(window.innerWidth || 0, window.innerHeight || 0) > 0
+            && Math.min(window.innerWidth, window.innerHeight) <= 820;
+
+        return coarsePointer || narrowViewport;
+    } catch (error) {
+        return false;
+    }
+}
+
+function recordRuntimeCheckpoint(label) {
+    try {
+        sessionStorage.setItem("ibc02-runtime-checkpoint", JSON.stringify({
+            label,
+            at: Date.now()
+        }));
+    } catch (error) {
+        // Ignore storage failures in private/incognito or restricted browsers.
+    }
+}
+
+function readRuntimeCheckpoint() {
+    try {
+        const raw = sessionStorage.getItem("ibc02-runtime-checkpoint");
+        return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+        return null;
+    }
+}
+
+
+function svgToDataUri(svg) {
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(String(svg || "").trim())}`;
+}
+
+const BLIND_PACK_CONFIG = {
+    totalCards: 12,
+    fromA: 2,
+    fromMix: 2,
+    fromBoys: 8,
+    folderA: "images/A",
+    folderMix: "images/mix",
+    boysRoot: "images/boys",
+    boyFolders: Array.from({ length: 8 }, (_, index) => `boy${index + 1}`),
+    packImage: "assets/ui/pack.png",
+    cardBackImage: "assets/ui/card_back.png"
+};
+const FILM_REWIND_CONFIG = {
+    totalMs: 15000,
+    ignitionMs: 3000,
+    pauseMs: 200,
+    runMs: 12000,
+    totalImages: 15,
+    fromClass: 12,
+    fromGirl: 3,
+    classGroupSize: 4,
+    repeatCopies: 3,
+    classFolder: "images/class",
+    girlFolder: "images/girl"
+};
+const filmStripState = {
+    uniqueImages: [],
+    rawOffset: 0,
+    loopAnchor: 0,
+    cycleWidth: 0,
+    step: 0,
+    viewportWidth: 0,
+    itemWidth: 0
+};
+
+const DEFAULT_PROFILE_FALLBACK = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 480'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23180d24'/%3E%3Cstop offset='1' stop-color='%23632957'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='480' height='480' fill='url(%23g)'/%3E%3Ccircle cx='240' cy='190' r='78' fill='rgba(255,255,255,0.16)'/%3E%3Crect x='120' y='292' width='240' height='108' rx='54' fill='rgba(255,255,255,0.16)'/%3E%3Ctext x='50%25' y='438' fill='%23ffe8f6' font-family='Arial' font-size='34' text-anchor='middle'%3EIBC02%3C/text%3E%3C/svg%3E";
+const DEFAULT_BLIND_PACK_IMAGE = svgToDataUri(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 760">
+  <defs>
+    <linearGradient id="packBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffe49c"/>
+      <stop offset="38%" stop-color="#ff9d5f"/>
+      <stop offset="100%" stop-color="#a33774"/>
+    </linearGradient>
+    <linearGradient id="packShine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.75)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+  </defs>
+  <rect x="58" y="26" width="424" height="708" rx="46" fill="url(#packBg)"/>
+  <rect x="84" y="62" width="372" height="636" rx="34" fill="rgba(28,10,28,0.24)" stroke="rgba(255,250,235,0.55)" stroke-width="4"/>
+  <path d="M112 118h316l-14 78H126z" fill="rgba(255,248,231,0.42)"/>
+  <rect x="122" y="184" width="296" height="182" rx="28" fill="rgba(54,18,43,0.28)" stroke="rgba(255,247,219,0.42)" stroke-width="4"/>
+  <circle cx="272" cy="276" r="74" fill="rgba(255,247,219,0.22)"/>
+  <path d="M272 214c14 26 32 42 54 50-32 10-52 34-54 68-4-34-24-58-56-68 24-10 42-26 56-50Z" fill="#fff3d0"/>
+  <rect x="152" y="422" width="238" height="110" rx="22" fill="rgba(57,12,53,0.34)" stroke="rgba(255,241,206,0.36)" stroke-width="3"/>
+  <text x="50%" y="474" fill="#fff4da" font-family="Arial, sans-serif" font-size="44" font-weight="700" text-anchor="middle">BLIND</text>
+  <text x="50%" y="522" fill="#fff4da" font-family="Arial, sans-serif" font-size="44" font-weight="700" text-anchor="middle">PACK</text>
+  <path d="M118 74H420L394 132H144z" fill="url(#packShine)" opacity="0.75"/>
+</svg>
+`);
+const DEFAULT_CARD_BACK_IMAGE = svgToDataUri(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 900">
+  <defs>
+    <linearGradient id="cardBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#251635"/>
+      <stop offset="45%" stop-color="#502a62"/>
+      <stop offset="100%" stop-color="#0d1327"/>
+    </linearGradient>
+    <radialGradient id="cardCore" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#ffe39f"/>
+      <stop offset="52%" stop-color="#ff84c9"/>
+      <stop offset="100%" stop-color="rgba(255,132,201,0)"/>
+    </radialGradient>
+  </defs>
+  <rect width="660" height="900" rx="52" fill="url(#cardBg)"/>
+  <rect x="26" y="26" width="608" height="848" rx="38" fill="none" stroke="rgba(255,245,227,0.48)" stroke-width="6"/>
+  <circle cx="330" cy="446" r="188" fill="url(#cardCore)" opacity="0.95"/>
+  <circle cx="330" cy="446" r="148" fill="none" stroke="rgba(255,245,227,0.58)" stroke-width="10"/>
+  <path d="M330 320c24 44 56 72 96 88-56 18-92 62-96 122-6-60-42-104-100-122 42-16 74-44 100-88Z" fill="#fff1cf"/>
+  <path d="M330 238v84M330 570v84M122 446h84M454 446h84" stroke="rgba(255,241,207,0.65)" stroke-width="10" stroke-linecap="round"/>
+  <text x="50%" y="790" fill="#fff1cf" font-family="Arial, sans-serif" font-size="50" font-weight="700" text-anchor="middle">IBC02</text>
+</svg>
+`);
+const LOCAL_GALLERY_CONFIG = {
+    manifestName: "gallery.json",
+    probeLimit: 40,
+    extensions: ["jpg", "jpeg", "png", "webp", "gif", "svg"],
+    patterns: [
+        (index) => `${index}`,
+        (index) => `${String(index).padStart(2, "0")}`,
+        (index) => `img${index}`,
+        (index) => `img${String(index).padStart(2, "0")}`,
+        (index) => `image${index}`,
+        (index) => `photo${index}`,
+        (index) => `frame${index}`
+    ]
+};
+const DEFAULT_ROSE_MESSAGES = [
+    { author: "IBC02", text: "\u0043\u1ea3m \u01a1n b\u1ea1n \u0111\u00e3 lu\u00f4n mang \u0111\u1ebfn s\u1ef1 d\u1ecbu d\u00e0ng cho c\u1ea3 l\u1edbp." },
+    { author: "IBC02", text: "\u0043h\u00fac b\u1ea1n lu\u00f4n r\u1ea1ng r\u1ee1 v\u00e0 gi\u1eef \u0111\u01b0\u1ee3c n\u0103ng l\u01b0\u1ee3ng t\u1ed1t \u0111\u1eb9p n\u00e0y." },
+    { author: "IBC02", text: "\u0042\u1ea1n l\u00e0 m\u1ed9t ph\u1ea7n k\u00fd \u1ee9c th\u1eadt \u0111\u1eb9p c\u1ee7a IBC02." },
+    { author: "IBC02", text: "\u004d\u00f4ng b\u1ea1n lu\u00f4n t\u1ef1 tin tr\u00ean m\u1ecdi ch\u1eb7ng \u0111\u01b0\u1eddng ph\u00eda tr\u01b0\u1edbc." },
+    { author: "IBC02", text: "\u0043\u1ea3m \u01a1n b\u1ea1n v\u00ec \u0111\u00e3 \u0111\u1ed3ng h\u00e0nh c\u00f9ng c\u1ea3 l\u1edbp trong nh\u1eefng n\u0103m thanh xu\u00e2n." },
+    { author: "IBC02", text: "\u0043h\u00fac b\u1ea1n c\u00f3 th\u1eadt nhi\u1ec1u ni\u1ec1m vui, may m\u1eafn v\u00e0 h\u1ea1nh ph\u00fac." },
+    { author: "IBC02", text: "\u004d\u1ed7i b\u1ee9c \u1ea3nh, m\u1ed7i kho\u1ea3nh kh\u1eafc c\u1ee7a b\u1ea1n \u0111\u1ec1u l\u00e0 m\u1ed9t ph\u1ea7n r\u1ea5t \u0111\u00e1ng qu\u00fd." },
+    { author: "IBC02", text: "\u0043\u1ea3m \u01a1n b\u1ea1n \u0111\u00e3 l\u00e0 m\u1ed9t \u0111\u00f3a h\u1ed3ng \u0111\u1eb9p c\u1ee7a IBC02." }
+];
+const roseGalleryCache = new Map();
+
+function rose(config) {
+    const messages = Array.isArray(config.msg) ? config.msg : config.msg ? [config.msg] : [];
+
+    return {
+        name: config.name || "",
+        aliases: Array.isArray(config.aliases) ? config.aliases : [],
+        pic: String(config.pic || "").trim(),
+        msg: messages
+            .map((entry) => {
+                if (typeof entry === "string") {
+                    return { author: "IBC02", text: entry };
+                }
+
+                return {
+                    author: entry && entry.author ? entry.author : "IBC02",
+                    text: entry && entry.text ? entry.text : ""
+                };
+            })
+            .filter((entry) => entry.text)
+    };
+}
+
+// Local folder rule:
+// Nguyen Van A -> ./nguyenvana/
+// If the folder name differs, set `pic: "tenfolder"` in the rose entry below.
+const ROSES = [
+    rose({
+        name: "name1",
+        aliases: [],
+        msg: [
+            { author: "IBC02", text: "\u004eame1, c\u1ea3 l\u1edbp r\u1ea5t vui khi c\u00f3 b\u1ea1n trong thanh xu\u00e2n n\u00e0y." },
+            { author: "IBC02", text: "\u0043h\u00fac b\u1ea1n lu\u00f4n gi\u1eef \u0111\u01b0\u1ee3c n\u0103ng l\u01b0\u1ee3ng \u1ea5m \u00e1p v\u00e0 r\u1ef1c r\u1ee1." },
+            { author: "IBC02", text: "\u004d\u1ed7i kho\u1ea3nh kh\u1eafc c\u1ee7a b\u1ea1n \u0111\u1ec1u l\u00e0 m\u1ed9t m\u1ea3nh gh\u00e9p \u0111\u1eb9p c\u1ee7a IBC02." },
+            { author: "IBC02", text: "\u0043\u1ea3m \u01a1n b\u1ea1n \u0111\u00e3 l\u00e0m cho c\u1ea3 l\u1edbp c\u00f3 th\u00eam r\u1ea5t nhi\u1ec1u ti\u1ebfng c\u01b0\u1eddi." }
+        ]
+    }),
+    rose({
+        name: "name2",
+        aliases: [],
+        msg: [
+            { author: "IBC02", text: "\u004eame2, ch\u00fac b\u1ea1n lu\u00f4n t\u1ef1 tin v\u00e0 v\u1eefng v\u00e0ng tr\u00ean m\u1ecdi h\u00e0nh tr\u00ecnh." },
+            { author: "IBC02", text: "\u0043\u1ea3m \u01a1n b\u1ea1n \u0111\u00e3 mang \u0111\u1ebfn s\u1ef1 d\u1ecbu d\u00e0ng v\u00e0 t\u00edch c\u1ef1c cho IBC02." },
+            { author: "IBC02", text: "\u004d\u00f4ng r\u1eb1ng m\u1ed7i b\u1ee9c \u1ea3nh trong album n\u00e0y s\u1ebd g\u1ee3i l\u1ea1i th\u1eadt nhi\u1ec1u k\u1ef7 ni\u1ec7m \u0111\u1eb9p." },
+            { author: "IBC02", text: "\u0043h\u00fac b\u1ea1n c\u00f3 m\u1ed9t ng\u00e0y th\u1eadt vui v\u00e0 m\u1ed9t thanh xu\u00e2n th\u1eadt r\u1ef1c r\u1ee1." }
+        ]
+    }),
+    rose({ name: "name3", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name4", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name5", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name6", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name7", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name8", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name9", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name10", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name11", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name12", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name13", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name14", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name15", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name16", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name17", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name18", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name19", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name20", aliases: [], msg: DEFAULT_ROSE_MESSAGES }),
+    rose({ name: "name21", aliases: [], msg: DEFAULT_ROSE_MESSAGES })
+];
+
+function normalizeName(value) {
+    return String(value || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\u0111/g, "d")
+        .replace(/[^a-z0-9\s]/g, "");
+}
+
+function toRoseFolderName(value) {
+    return normalizeName(value).replace(/\s+/g, "");
+}
+
+function createTransientRose(name) {
+    return rose({ name, aliases: [], msg: DEFAULT_ROSE_MESSAGES });
+}
+
+function findRoseByName(value) {
+    const normalizedInput = normalizeName(value || "");
+    if (!normalizedInput) {
+        return null;
+    }
+
+    return ROSES.find((entry) => {
+        const candidates = [entry.name, ...(entry.aliases || [])];
+        return candidates.some((candidate) => normalizeName(candidate) === normalizedInput);
+    }) || null;
+}
+
+function getRoseMessages(roseProfile, desiredCount) {
+    const customMessages = Array.isArray(roseProfile && roseProfile.msg)
+        ? roseProfile.msg.filter((entry) => entry && entry.text)
+        : [];
+    const pool = customMessages.length ? customMessages : DEFAULT_ROSE_MESSAGES;
+    const resolved = [];
+
+    for (let i = 0; i < desiredCount; i += 1) {
+        resolved.push(pool[i % pool.length]);
+    }
+
+    return resolved;
+}
+
+function getRoseFolderCandidates(roseProfile, fallbackName = selectedName) {
+    const explicitFolder = roseProfile && roseProfile.pic ? String(roseProfile.pic).trim() : "";
+    const fromRoseName = roseProfile && roseProfile.name ? toRoseFolderName(roseProfile.name) : "";
+    const fromFallbackName = fallbackName ? toRoseFolderName(fallbackName) : "";
+
+    return Array.from(new Set([explicitFolder, fromRoseName, fromFallbackName].filter(Boolean)));
+}
+
+function getRoseFolderName(roseProfile, fallbackName = selectedName) {
+    return getRoseFolderCandidates(roseProfile, fallbackName)[0] || "";
+}
+
+function getRoseCacheKey(roseProfile, fallbackName = selectedName) {
+    return getRoseFolderName(roseProfile, fallbackName) || "__empty__";
+}
+
+function buildFolderPath(folderName) {
+    const cleaned = String(folderName || "")
+        .trim()
+        .replace(/^\.?[\\/]+/, "")
+        .replace(/[\\/]+$/, "")
+        .replace(/\\/g, "/");
+
+    return cleaned ? `./${cleaned}` : "";
+}
+
+function buildFolderImageCandidates(folderPath, index) {
+    const candidates = [];
+    LOCAL_GALLERY_CONFIG.patterns.forEach((buildName) => {
+        const baseName = buildName(index);
+        LOCAL_GALLERY_CONFIG.extensions.forEach((ext) => {
+            candidates.push(`${folderPath}/${baseName}.${ext}`);
+        });
+    });
+    return candidates;
+}
+
+function loadImageSource(src, timeoutMs = 1400) {
+    return new Promise((resolve) => {
+        let settled = false;
+        const img = new Image();
+
+        const finish = (value) => {
+            if (!settled) {
+                settled = true;
+                resolve(value);
+            }
+        };
+
+        img.onload = () => finish(src);
+        img.onerror = () => finish("");
+        img.src = src;
+
+        setTimeout(() => finish(""), timeoutMs);
+    });
+}
+
+function preloadImageDetails(imageUrls, timeoutMs = 2600) {
+    const uniqueUrls = Array.from(new Set((Array.isArray(imageUrls) ? imageUrls : []).filter(Boolean)));
+    const concurrency = isLikelyMobileRuntime() ? 2 : 6;
+    const loadSingleImage = (url) => new Promise((resolve) => {
+        const img = new Image();
+        let settled = false;
+
+        const finish = () => {
+            if (settled) {
+                return;
+            }
+
+            settled = true;
+            clearTimeout(timeoutId);
+            resolve({
+                src: url,
+                width: img.naturalWidth || 0,
+                height: img.naturalHeight || 0
+            });
+        };
+
+        const onReady = () => {
+            if (typeof img.decode === "function") {
+                img.decode().catch(() => null).finally(finish);
+                return;
+            }
+
+            finish();
+        };
+
+        const timeoutId = setTimeout(finish, timeoutMs);
+
+        img.decoding = "async";
+        img.onload = onReady;
+        img.onerror = finish;
+        img.src = url;
+
+        if (img.complete) {
+            onReady();
+        }
+    });
+    const results = [];
+    let nextIndex = 0;
+
+    const runWorker = async () => {
+        while (nextIndex < uniqueUrls.length) {
+            const currentIndex = nextIndex;
+            nextIndex += 1;
+            results[currentIndex] = await loadSingleImage(uniqueUrls[currentIndex]);
+        }
+    };
+
+    return Promise.all(Array.from({
+        length: Math.max(1, Math.min(concurrency, uniqueUrls.length || 1))
+    }, () => runWorker())).then(() => results);
+}
+
+function getImageOrientation(width, height) {
+    if (width > height) {
+        return "landscape";
+    }
+
+    if (height > width) {
+        return "portrait";
+    }
+
+    return "square";
+}
+
+async function loadFirstAvailable(candidates) {
+    const results = await Promise.all(candidates.map((candidate) => loadImageSource(candidate)));
+    return results.find(Boolean) || "";
+}
+
+async function loadGalleryFromManifest(folderPath) {
+    try {
+        const response = await fetch(`${folderPath}/${LOCAL_GALLERY_CONFIG.manifestName}`, { cache: "no-store" });
+        if (!response.ok) {
+            return [];
+        }
+
+        const payload = await response.json();
+        const files = Array.isArray(payload) ? payload : Array.isArray(payload.images) ? payload.images : [];
+
+        return Array.from(new Set(files
+            .map((fileName) => String(fileName || "").trim())
+            .filter((fileName) => /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(fileName))
+            .map((fileName) => `${folderPath}/${fileName.replace(/^\.?[\\/]+/, "")}`)));
+    } catch (error) {
+        return [];
+    }
+}
+
+async function loadGalleryFromDirectoryListing(folderPath) {
+    try {
+        const response = await fetch(`${folderPath}/`, { cache: "no-store" });
+        if (!response.ok) {
+            return [];
+        }
+
+        const contentType = response.headers.get("content-type") || "";
+        if (!contentType.includes("text/html")) {
+            return [];
+        }
+
+        const html = await response.text();
+        const parser = new DOMParser();
+        const documentNode = parser.parseFromString(html, "text/html");
+        const links = Array.from(documentNode.querySelectorAll("a[href]"), (anchor) => anchor.getAttribute("href") || "");
+
+        return Array.from(new Set(links
+            .map((href) => href.trim())
+            .filter((href) => /\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(href))
+            .map((href) => href.startsWith("http") ? href : `${folderPath}/${href.replace(/^\.?[\\/]+/, "")}`)));
+    } catch (error) {
+        return [];
+    }
+}
+
+async function loadGalleryByProbe(folderPath) {
+    const discovered = [];
+    let missStreak = 0;
+
+    for (let index = 1; index <= LOCAL_GALLERY_CONFIG.probeLimit; index += 1) {
+        const foundSource = await loadFirstAvailable(buildFolderImageCandidates(folderPath, index));
+
+        if (foundSource) {
+            discovered.push(foundSource);
+            missStreak = 0;
+            continue;
+        }
+
+        missStreak += 1;
+        if (discovered.length && missStreak >= 2) {
+            break;
+        }
+
+        if (!discovered.length && index >= 6) {
+            break;
+        }
+    }
+
+    return discovered;
+}
+
+async function resolveRoseGallery(roseProfile, fallbackName = selectedName) {
+    const cacheKey = getRoseCacheKey(roseProfile, fallbackName);
+    if (roseGalleryCache.has(cacheKey)) {
+        return roseGalleryCache.get(cacheKey);
+    }
+
+    const folderCandidates = getRoseFolderCandidates(roseProfile, fallbackName);
+    for (const folderName of folderCandidates) {
+        const folderPath = buildFolderPath(folderName);
+        if (!folderPath) {
+            continue;
+        }
+
+        const manifestGallery = await loadGalleryFromManifest(folderPath);
+        if (manifestGallery.length) {
+            roseGalleryCache.set(cacheKey, manifestGallery);
+            return manifestGallery;
+        }
+
+        const listedGallery = await loadGalleryFromDirectoryListing(folderPath);
+        if (listedGallery.length) {
+            roseGalleryCache.set(cacheKey, listedGallery);
+            return listedGallery;
+        }
+
+        const probedGallery = await loadGalleryByProbe(folderPath);
+        if (probedGallery.length) {
+            roseGalleryCache.set(cacheKey, probedGallery);
+            return probedGallery;
+        }
+    }
+
+    roseGalleryCache.set(cacheKey, []);
+    return [];
+}
+
+function getCachedRoseGallery(roseProfile, fallbackName = selectedName) {
+    return roseGalleryCache.get(getRoseCacheKey(roseProfile, fallbackName)) || [];
+}
+
+function clampNumber(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+function shuffleArray(items) {
+    const cloned = Array.isArray(items) ? [...items] : [];
+
+    for (let index = cloned.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [cloned[index], cloned[randomIndex]] = [cloned[randomIndex], cloned[index]];
+    }
+
+    return cloned;
+}
+
+async function resolveStaticGallery(folderPath) {
+    const normalizedPath = buildFolderPath(folderPath);
+
+    if (!normalizedPath) {
+        return [];
+    }
+
+    if (staticGalleryCache.has(normalizedPath)) {
+        return staticGalleryCache.get(normalizedPath);
+    }
+
+    let gallery = await loadGalleryFromManifest(normalizedPath);
+
+    if (!gallery.length) {
+        gallery = await loadGalleryFromDirectoryListing(normalizedPath);
+    }
+
+    if (!gallery.length) {
+        gallery = await loadGalleryByProbe(normalizedPath);
+    }
+
+    staticGalleryCache.set(normalizedPath, gallery);
+    return gallery;
+}
+
+function buildBlindCardPlaceholder(title, accentA, accentB) {
+    return svgToDataUri(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 900">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${accentA}"/>
+          <stop offset="100%" stop-color="${accentB}"/>
+        </linearGradient>
+      </defs>
+      <rect width="660" height="900" rx="52" fill="url(#bg)"/>
+      <rect x="26" y="26" width="608" height="848" rx="38" fill="rgba(10,10,16,0.16)" stroke="rgba(255,255,255,0.35)" stroke-width="6"/>
+      <circle cx="330" cy="324" r="132" fill="rgba(255,255,255,0.18)"/>
+      <path d="M330 244c22 42 52 68 90 84-52 18-86 58-90 114-6-56-40-96-92-114 38-16 68-42 92-84Z" fill="rgba(255,248,231,0.94)"/>
+      <rect x="112" y="560" width="436" height="172" rx="26" fill="rgba(15,9,20,0.24)"/>
+      <text x="50%" y="642" fill="#fff7ea" font-family="Arial, sans-serif" font-size="50" font-weight="700" text-anchor="middle">${title}</text>
+      <text x="50%" y="700" fill="rgba(255,247,234,0.88)" font-family="Arial, sans-serif" font-size="28" text-anchor="middle">IBC02 BLIND PACK</text>
+    </svg>
+    `);
+}
+
+async function resolveUiAsset(src, fallbackSrc) {
+    const resolved = await loadImageSource(src, 1000);
+    return resolved || fallbackSrc;
+}
+
+function pickUniqueCardsFromGallery(gallery, count, usedImages, buildFallback, metaLabel) {
+    const picked = [];
+    const shuffled = shuffleArray(gallery);
+
+    shuffled.forEach((src) => {
+        if (picked.length >= count || usedImages.has(src)) {
+            return;
+        }
+
+        usedImages.add(src);
+        picked.push({
+            src,
+            label: metaLabel
+        });
+    });
+
+    while (picked.length < count) {
+        const fallbackSrc = buildFallback(picked.length);
+        const keyedFallback = `${metaLabel}-${picked.length}-${fallbackSrc}`;
+
+        if (!usedImages.has(keyedFallback)) {
+            usedImages.add(keyedFallback);
+            picked.push({
+                src: fallbackSrc,
+                label: metaLabel
+            });
+        } else {
+            break;
+        }
+    }
+
+    return picked;
+}
+
+function serializeBlindPack(cards) {
+    return (Array.isArray(cards) ? cards : []).map((card) => `${card.label || "CARD"}::${card.src}`).join("|");
+}
+
+async function buildBlindPackCards(previousSignature = "") {
+    const [galleryA, galleryMix, boyEntries] = await Promise.all([
+        resolveStaticGallery(BLIND_PACK_CONFIG.folderA),
+        resolveStaticGallery(BLIND_PACK_CONFIG.folderMix),
+        Promise.all(BLIND_PACK_CONFIG.boyFolders.map(async (folderName) => ({
+            folderName,
+            gallery: await resolveStaticGallery(`${BLIND_PACK_CONFIG.boysRoot}/${folderName}`)
+        })))
+    ]);
+
+    const buildCandidate = () => {
+        const usedImages = new Set();
+        const cardsFromA = pickUniqueCardsFromGallery(
+            galleryA,
+            BLIND_PACK_CONFIG.fromA,
+            usedImages,
+            (index) => buildBlindCardPlaceholder(`A ${index + 1}`, "#f8cc7a", "#d56780"),
+            "Folder A"
+        );
+
+        const cardsFromMix = pickUniqueCardsFromGallery(
+            galleryMix,
+            BLIND_PACK_CONFIG.fromMix,
+            usedImages,
+            (index) => buildBlindCardPlaceholder(`MIX ${index + 1}`, "#84d0ff", "#8c4dff"),
+            "Mix"
+        );
+
+        const cardsFromBoys = boyEntries.slice(0, BLIND_PACK_CONFIG.fromBoys).map((entry, index) => {
+            const selected = pickUniqueCardsFromGallery(
+                entry.gallery,
+                1,
+                usedImages,
+                () => buildBlindCardPlaceholder(entry.folderName.toUpperCase(), "#8fe7c8", "#277c88"),
+                entry.folderName
+            );
+
+            if (selected.length) {
+                return {
+                    ...selected[0],
+                    label: entry.folderName
+                };
+            }
+
+            return {
+                src: buildBlindCardPlaceholder(`BOY ${index + 1}`, "#9ed9ff", "#4254e2"),
+                label: entry.folderName
+            };
+        });
+
+        return shuffleArray([
+            ...cardsFromA,
+            ...cardsFromBoys,
+            ...cardsFromMix
+        ]).map((card, index) => ({
+            ...card,
+            id: `blind-pack-card-${index + 1}`
+        }));
+    };
+
+    let cards = buildCandidate();
+    let signature = serializeBlindPack(cards);
+    let attempts = 0;
+
+    while (previousSignature && signature === previousSignature && attempts < 8) {
+        attempts += 1;
+        cards = buildCandidate();
+        signature = serializeBlindPack(cards);
+    }
+
+    blindPackLastPackSignature = signature;
+    return cards;
+}
+
+async function prepareBlindPackResources(previousSignature = blindPackLastPackSignature) {
+    const [packImage, cardBackImage, cards] = await Promise.all([
+        resolveUiAsset(BLIND_PACK_CONFIG.packImage, DEFAULT_BLIND_PACK_IMAGE),
+        resolveUiAsset(BLIND_PACK_CONFIG.cardBackImage, DEFAULT_CARD_BACK_IMAGE),
+        buildBlindPackCards(previousSignature)
+    ]);
+
+    const preloadedImages = await preloadImageDetails([packImage, cardBackImage, ...cards.map((card) => card.src)]);
+    const imageMetaMap = new Map(preloadedImages.map((entry) => [entry.src, entry]));
+
+    return {
+        packImage,
+        cardBackImage,
+        cards: cards.map((card) => {
+            const meta = imageMetaMap.get(card.src) || { width: 0, height: 0 };
+
+            return {
+                ...card,
+                width: meta.width,
+                height: meta.height,
+                orientation: getImageOrientation(meta.width, meta.height)
+            };
+        })
+    };
+}
+
+function clearFilmSceneAnimation(options = {}) {
+    const scene = document.getElementById("film-scene");
+    const track = document.getElementById("filmStripTrack");
+    const releaseTrack = !!options.releaseTrack;
+
+    if (filmAnimationFrame) {
+        cancelAnimationFrame(filmAnimationFrame);
+        filmAnimationFrame = null;
+    }
+
+    if (filmSceneTimer) {
+        clearTimeout(filmSceneTimer);
+        filmSceneTimer = null;
+    }
+
+    filmStripState.rawOffset = 0;
+    filmStripState.loopAnchor = 0;
+    filmStripState.cycleWidth = 0;
+    filmStripState.step = 0;
+    filmStripState.viewportWidth = 0;
+    filmStripState.itemWidth = 0;
+
+    if (scene) {
+        scene.classList.remove("is-ending");
+    }
+
+    if (track) {
+        track.style.transform = "translate3d(0, 0, 0)";
+        if (releaseTrack) {
+            track.innerHTML = "";
+        }
+    }
+
+    if (releaseTrack) {
+        filmStripState.uniqueImages = [];
+    }
+}
+
+function buildRewindYouthPlaceholder(title, subtitle, colorA, colorB) {
+    return svgToDataUri(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${colorA}"/>
+          <stop offset="100%" stop-color="${colorB}"/>
+        </linearGradient>
+      </defs>
+      <rect width="900" height="1200" rx="52" fill="url(#bg)"/>
+      <rect x="36" y="36" width="828" height="1128" rx="42" fill="rgba(18,10,20,0.16)" stroke="rgba(255,255,255,0.28)" stroke-width="8"/>
+      <circle cx="450" cy="360" r="170" fill="rgba(255,255,255,0.16)"/>
+      <path d="M450 248c28 58 70 98 126 124-72 24-118 80-126 160-8-80-56-136-132-160 58-26 100-66 132-124Z" fill="rgba(255,247,231,0.96)"/>
+      <rect x="156" y="694" width="588" height="220" rx="32" fill="rgba(15,10,18,0.22)"/>
+      <text x="50%" y="810" fill="#fff8ee" font-family="Arial, sans-serif" font-size="76" font-weight="700" text-anchor="middle">${title}</text>
+      <text x="50%" y="882" fill="rgba(255,247,236,0.92)" font-family="Arial, sans-serif" font-size="34" text-anchor="middle">${subtitle}</text>
+    </svg>
+    `);
+}
+
+function pickRandomGallerySources(gallery, count, usedSources, fallbackFactory) {
+    const picks = [];
+    const shuffled = shuffleArray(Array.isArray(gallery) ? gallery.filter(Boolean) : []);
+
+    shuffled.forEach((src) => {
+        if (picks.length >= count || usedSources.has(src)) {
+            return;
+        }
+
+        usedSources.add(src);
+        picks.push(src);
+    });
+
+    while (picks.length < count) {
+        const fallbackSrc = fallbackFactory(picks.length);
+        if (usedSources.has(fallbackSrc)) {
+            break;
+        }
+
+        usedSources.add(fallbackSrc);
+        picks.push(fallbackSrc);
+    }
+
+    return picks;
+}
+
+async function buildRewindYouthImageSet() {
+    const usedSources = new Set();
+    const [classGallery, girlGallery] = await Promise.all([
+        resolveStaticGallery(FILM_REWIND_CONFIG.classFolder),
+        resolveStaticGallery(FILM_REWIND_CONFIG.girlFolder)
+    ]);
+
+    const classPicks = pickRandomGallerySources(
+        classGallery,
+        FILM_REWIND_CONFIG.fromClass,
+        usedSources,
+        (index) => buildRewindYouthPlaceholder(`CLASS ${index + 1}`, "IBC02 CLASS MEMORY", "#ffca86", "#d86b85")
+    );
+
+    const girlPicks = pickRandomGallerySources(
+        girlGallery,
+        FILM_REWIND_CONFIG.fromGirl,
+        usedSources,
+        (index) => buildRewindYouthPlaceholder(`GIRL ${index + 1}`, "IBC02 SPECIAL MEMORY", "#8ecfff", "#9150ff")
+    );
+
+    const orderedImages = [];
+    const groupCount = Math.ceil(FILM_REWIND_CONFIG.fromClass / FILM_REWIND_CONFIG.classGroupSize);
+
+    for (let groupIndex = 0; groupIndex < groupCount; groupIndex += 1) {
+        const classStartIndex = groupIndex * FILM_REWIND_CONFIG.classGroupSize;
+        const classBatch = classPicks.slice(classStartIndex, classStartIndex + FILM_REWIND_CONFIG.classGroupSize);
+
+        orderedImages.push(...classBatch);
+
+        if (girlPicks[groupIndex]) {
+            orderedImages.push(girlPicks[groupIndex]);
+        }
+    }
+
+    return orderedImages.slice(0, FILM_REWIND_CONFIG.totalImages);
+}
+
+function preloadFilmImages(imageUrls) {
+    return preloadImageDetails(imageUrls).then((entries) => entries.map((entry) => entry.src));
+}
+
+function renderFilmStrip(imageUrls) {
+    const track = document.getElementById("filmStripTrack");
+
+    if (!track) {
+        return [];
+    }
+
+    const uniqueImages = Array.isArray(imageUrls) ? imageUrls.filter(Boolean) : [];
+    track.innerHTML = "";
+    filmStripState.uniqueImages = uniqueImages;
+
+    if (!uniqueImages.length) {
+        return [];
+    }
+
+    const repeatedImages = [];
+    const fragment = document.createDocumentFragment();
+
+    for (let copyIndex = 0; copyIndex < FILM_REWIND_CONFIG.repeatCopies; copyIndex += 1) {
+        repeatedImages.push(...uniqueImages);
+    }
+
+    repeatedImages.forEach((src, index) => {
+        const frame = document.createElement("div");
+        const img = document.createElement("img");
+
+        frame.className = "film-strip-item";
+        img.src = src;
+        img.alt = `Rewind youth frame ${index + 1}`;
+        img.decoding = "async";
+        img.draggable = false;
+        frame.appendChild(img);
+        fragment.appendChild(frame);
+    });
+
+    track.appendChild(fragment);
+
+    return repeatedImages;
+}
+
+function measureFilmStripLayout() {
+    const stage = document.getElementById("filmStage");
+    const track = document.getElementById("filmStripTrack");
+    const items = track ? Array.from(track.querySelectorAll(".film-strip-item")) : [];
+    const firstItem = items[0] || null;
+    const nextCycleItem = items[filmStripState.uniqueImages.length] || null;
+
+    if (!stage || !track || !firstItem || !filmStripState.uniqueImages.length) {
+        return null;
+    }
+
+    const itemWidth = firstItem.getBoundingClientRect().width || Math.min(window.innerWidth * 0.82, 360);
+    const gap = parseFloat(window.getComputedStyle(track).gap || "72") || 72;
+    const step = itemWidth + gap;
+    const cycleWidth = nextCycleItem
+        ? nextCycleItem.getBoundingClientRect().left - firstItem.getBoundingClientRect().left
+        : step * filmStripState.uniqueImages.length;
+    const viewportWidth = stage.clientWidth || window.innerWidth || 390;
+
+    filmStripState.itemWidth = itemWidth;
+    filmStripState.step = step;
+    filmStripState.cycleWidth = cycleWidth;
+    filmStripState.viewportWidth = viewportWidth;
+
+    return {
+        itemWidth,
+        gap,
+        step,
+        cycleWidth,
+        viewportWidth
+    };
+}
+
+function getFilmCenteredOffset(itemIndex, measurement) {
+    const track = document.getElementById("filmStripTrack");
+    const items = track ? track.querySelectorAll(".film-strip-item") : [];
+    const item = items[itemIndex];
+
+    if (item) {
+        return measurement.viewportWidth / 2 - (item.offsetLeft + item.getBoundingClientRect().width / 2);
+    }
+
+    return measurement.viewportWidth / 2 - (itemIndex * measurement.step + measurement.itemWidth / 2);
+}
+
+function normalizeFilmOffset(rawOffset, measurement = filmStripState, referenceOffset = filmStripState.loopAnchor) {
+    if (!measurement || !measurement.cycleWidth) {
+        return rawOffset;
+    }
+
+    const cycleWidth = measurement.cycleWidth;
+    const anchor = Number.isFinite(referenceOffset) ? referenceOffset : 0;
+    const delta = anchor - rawOffset;
+    const normalizedDistance = ((delta % cycleWidth) + cycleWidth) % cycleWidth;
+
+    return anchor - normalizedDistance;
+}
+
+function refreshFilmStripLayout() {
+    const track = document.getElementById("filmStripTrack");
+    const measurement = measureFilmStripLayout();
+
+    if (!track || !measurement || !filmStripState.uniqueImages.length) {
+        return;
+    }
+
+    track.style.transform = `translate3d(${normalizeFilmOffset(filmStripState.rawOffset, measurement, filmStripState.loopAnchor).toFixed(3)}px, 0, 0)`;
+}
+
+function runFilmAnimation(totalDurationMs, roseProfile) {
+    const scene = document.getElementById("film-scene");
+    const track = document.getElementById("filmStripTrack");
+    const filmLoading = document.getElementById("filmLoading");
+    const filmCaption = document.getElementById("filmCaption");
+    const measurement = measureFilmStripLayout();
+
+    if (!scene || !track || !filmLoading || !filmCaption || !measurement || !filmStripState.uniqueImages.length) {
+        recordRuntimeCheckpoint("film-scene-fallback-comment");
+        showScene("comment-scene");
+        startCommentScene(roseProfile || selectedRose);
+        return;
+    }
+
+    clearFilmSceneAnimation();
+    filmStripState.itemWidth = measurement.itemWidth;
+    filmStripState.step = measurement.step;
+    filmStripState.cycleWidth = measurement.cycleWidth;
+    filmStripState.viewportWidth = measurement.viewportWidth;
+    scene.classList.remove("is-ending");
+    filmCaption.classList.remove("show");
+    filmCaption.textContent = "";
+    filmLoading.textContent = "\u0110ang tua l\u1ea1i thanh xu\u00e2n...";
+    filmLoading.classList.add("show");
+
+    const startTime = performance.now();
+    const ignitionMs = FILM_REWIND_CONFIG.ignitionMs;
+    const pauseMs = FILM_REWIND_CONFIG.pauseMs;
+    const sceneAdvanceMs = Math.max(totalDurationMs, ignitionMs + pauseMs + 1200);
+    const middleSetStartIndex = filmStripState.uniqueImages.length;
+    const startOffset = getFilmCenteredOffset(middleSetStartIndex + 2, measurement);
+    const firstFrameHalfOffset = getFilmCenteredOffset(middleSetStartIndex, measurement) + measurement.itemWidth * 0.5;
+    const speedMultiplierBase = 1.3;
+    const calibrationSeconds = Math.max(1, FILM_REWIND_CONFIG.runMs / 1000);
+    const accelerationIntegral = (Math.pow(speedMultiplierBase, calibrationSeconds) - 1) / Math.log(speedMultiplierBase);
+    const travelDistance = measurement.cycleWidth * 1.62;
+    const baseSpeedPxPerMs = travelDistance / Math.max(1, accelerationIntegral * 1000);
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+    const getMotionState = (phaseElapsedMs) => {
+        const elapsedSeconds = Math.max(0, phaseElapsedMs / 1000);
+        const distance = baseSpeedPxPerMs * 1000 * ((Math.pow(speedMultiplierBase, elapsedSeconds) - 1) / Math.log(speedMultiplierBase));
+        return { distance };
+    };
+    let exitQueued = false;
+
+    filmStripState.rawOffset = startOffset;
+    filmStripState.loopAnchor = firstFrameHalfOffset;
+    track.style.transform = `translate3d(${normalizeFilmOffset(startOffset, measurement, filmStripState.loopAnchor).toFixed(3)}px, 0, 0)`;
+
+    const step = (now) => {
+        const elapsed = now - startTime;
+        let rawOffset = startOffset;
+
+        if (elapsed <= ignitionMs) {
+            const phaseRatio = clampNumber(elapsed / ignitionMs, 0, 1);
+            rawOffset = startOffset + (firstFrameHalfOffset - startOffset) * easeOutCubic(phaseRatio);
+        } else if (elapsed <= ignitionMs + pauseMs) {
+            rawOffset = firstFrameHalfOffset;
+        } else {
+            const phaseElapsedMs = elapsed - ignitionMs - pauseMs;
+            const { distance } = getMotionState(phaseElapsedMs);
+            rawOffset = firstFrameHalfOffset - distance;
+        }
+
+        filmStripState.rawOffset = rawOffset;
+        track.style.transform = `translate3d(${normalizeFilmOffset(rawOffset, measurement, filmStripState.loopAnchor).toFixed(3)}px, 0, 0)`;
+
+        if (!exitQueued && elapsed >= sceneAdvanceMs) {
+            exitQueued = true;
+            recordRuntimeCheckpoint("film-scene-ending");
+            filmLoading.classList.remove("show");
+            filmCaption.textContent = "\u004b\u00fd \u1ee9c b\u1eaft \u0111\u1ea7u hi\u1ec7n ra...";
+            filmCaption.classList.add("show");
+            scene.classList.add("is-ending");
+            track.style.transform = `translate3d(${normalizeFilmOffset(rawOffset, measurement, filmStripState.loopAnchor).toFixed(3)}px, 0, 0)`;
+
+            filmSceneTimer = setTimeout(() => {
+                filmSceneTimer = null;
+                showScene("comment-scene");
+                startCommentScene(roseProfile || selectedRose);
+            }, 950);
+            return;
+        }
+
+        filmAnimationFrame = requestAnimationFrame(step);
+    };
+
+    filmAnimationFrame = requestAnimationFrame(step);
+}
+
+
+
+function clearCommentTimers() {
+    commentSceneTimerHandles.forEach((id) => clearTimeout(id));
+    commentSceneTimerHandles = [];
+}
+
+function updateCommentFinalText(finalText, displayName) {
+    finalText.textContent = `\u0043\u1ea3m \u01a1n ${displayName} v\u00ec \u0111\u00e3 l\u00e0 m\u1ed9t ph\u1ea7n c\u1ee7a IBC02.`;
+    const heart = document.createElement("span");
+    heart.className = "comment-heart";
+    heart.textContent = "\u2764\uFE0F";
+    finalText.appendChild(heart);
+}
+
+function startCommentScene(roseProfile) {
+    recordRuntimeCheckpoint("comment-scene-start");
+    clearFilmSceneAnimation({ releaseTrack: true });
+    clearCommentTimers();
+
+    const activeRose = roseProfile || selectedRose || createTransientRose(selectedName || "IBC02");
+    const cards = Array.from(document.querySelectorAll("[data-comment-card]"));
+    const finalText = document.getElementById("commentFinalText");
+    const girlImage = document.getElementById("commentGirlImage");
+    const messages = getRoseMessages(activeRose, cards.length);
+    const gallery = getCachedRoseGallery(activeRose, activeRose.name);
+    const displayName = activeRose && activeRose.name ? activeRose.name : (selectedName || "\u0062\u1ea1n");
+
+    cards.forEach((card, index) => {
+        card.classList.remove("show");
+        const textEl = card.querySelector("[data-comment-text]");
+        const authorEl = card.querySelector("[data-comment-author]");
+        const message = messages[index];
+        textEl.textContent = `"${message.text}"`;
+        authorEl.textContent = `- ${message.author}`;
+    });
+
+    finalText.classList.remove("show");
+    updateCommentFinalText(finalText, displayName);
+
+    girlImage.classList.remove("show");
+    girlImage.alt = displayName;
+    girlImage.decoding = "async";
+    girlImage.loading = "eager";
+    girlImage.src = "";
+    girlImage.onerror = () => {
+        girlImage.onerror = null;
+        girlImage.src = DEFAULT_PROFILE_FALLBACK;
+    };
+
+    const nextAvatarSrc = gallery[0] || DEFAULT_PROFILE_FALLBACK;
+    const applyAvatarSource = () => {
+        girlImage.src = nextAvatarSrc;
+    };
+
+    const avatarRevealDelay = isLikelyMobileRuntime() ? 360 : 120;
+
+    if (isLikelyMobileRuntime()) {
+        commentSceneTimerHandles.push(setTimeout(applyAvatarSource, 240));
+    } else {
+        applyAvatarSource();
+    }
+
+    commentSceneTimerHandles.push(setTimeout(() => {
+        girlImage.classList.add("show");
+    }, avatarRevealDelay));
+
+    let totalDelay = 520;
+    cards.forEach((card) => {
+        const stepDelay = 920;
+        totalDelay += stepDelay;
+        commentSceneTimerHandles.push(setTimeout(() => {
+            card.classList.add("show");
+        }, totalDelay));
+    });
+
+    commentSceneTimerHandles.push(setTimeout(() => {
+        finalText.classList.add("show");
+    }, totalDelay + 700));
+
+    commentSceneTimerHandles.push(setTimeout(() => {
+        startBlindPackScene();
+    }, totalDelay + 2800));
+}
+
+async function startFilmSceneForRose(roseProfile) {
+    const filmScene = document.getElementById("film-scene");
+    const filmLoading = document.getElementById("filmLoading");
+    const filmCaption = document.getElementById("filmCaption");
+    const activeRose = roseProfile || selectedRose || createTransientRose(selectedName || "IBC02");
+
+    recordRuntimeCheckpoint("film-scene-start");
+    clearFilmSceneAnimation({ releaseTrack: true });
+    if (filmScene) {
+        filmScene.classList.remove("is-ending");
+    }
+
+    filmLoading.textContent = "\u0110ang tua l\u1ea1i thanh xu\u00e2n...";
+    filmCaption.classList.remove("show");
+    filmCaption.textContent = "";
+    filmLoading.classList.add("show");
+
+    const stripImages = await buildRewindYouthImageSet();
+    const resolvedImages = stripImages.length
+        ? stripImages
+        : Array.from({ length: FILM_REWIND_CONFIG.totalImages }, (_, index) => buildRewindYouthPlaceholder(`MEMORY ${index + 1}`, "IBC02 REWIND", "#ffd28f", "#8559f2"));
+
+    await preloadFilmImages(resolvedImages);
+    renderFilmStrip(resolvedImages);
+    const measurement = measureFilmStripLayout();
+    const track = document.getElementById("filmStripTrack");
+
+    if (measurement && track) {
+        const middleSetStartIndex = resolvedImages.length;
+        const startOffset = getFilmCenteredOffset(middleSetStartIndex + 2, measurement);
+        const loopAnchor = getFilmCenteredOffset(middleSetStartIndex, measurement) + measurement.itemWidth * 0.5;
+
+        filmStripState.rawOffset = startOffset;
+        filmStripState.loopAnchor = loopAnchor;
+        track.style.transform = `translate3d(${normalizeFilmOffset(startOffset, measurement, loopAnchor).toFixed(3)}px, 0, 0)`;
+    }
+
+    requestAnimationFrame(() => {
+        refreshFilmStripLayout();
+        requestAnimationFrame(() => {
+            runFilmAnimation(FILM_REWIND_CONFIG.totalMs, activeRose);
+        });
+    });
+}
+
+function queueBlindPackTimer(callback, delay) {
+    const timerId = setTimeout(() => {
+        const timerIndex = blindPackTimers.indexOf(timerId);
+        if (timerIndex >= 0) {
+            blindPackTimers.splice(timerIndex, 1);
+        }
+        callback();
+    }, delay);
+
+    blindPackTimers.push(timerId);
+    return timerId;
+}
+
+function clearBlindPackTimers() {
+    while (blindPackTimers.length) {
+        clearTimeout(blindPackTimers.pop());
+    }
+}
+
+function stopBlindPackFxLoop() {
+    if (blindPackFxFrame) {
+        cancelAnimationFrame(blindPackFxFrame);
+        blindPackFxFrame = null;
+    }
+
+    blindPackFxLastTime = 0;
+}
+
+function resizeBlindPackCanvas(force = false) {
+    const canvas = document.getElementById("blindPackFx");
+
+    if (!canvas) {
+        return;
+    }
+
+    if (!force && blindPackResizeScheduled) {
+        return;
+    }
+
+    blindPackResizeScheduled = true;
+
+    requestAnimationFrame(() => {
+        blindPackResizeScheduled = false;
+        const devicePixelRatioValue = window.devicePixelRatio || 1;
+        const nextWidth = Math.round(window.innerWidth * devicePixelRatioValue);
+        const nextHeight = Math.round(window.innerHeight * devicePixelRatioValue);
+
+        if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+            canvas.width = nextWidth;
+            canvas.height = nextHeight;
+        }
+
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
+
+        blindPackFxContext = canvas.getContext("2d");
+        if (blindPackFxContext) {
+            blindPackFxContext.setTransform(devicePixelRatioValue, 0, 0, devicePixelRatioValue, 0, 0);
+        }
+    });
+}
+
+function getBlindPackFxOrigin() {
+    return {
+        x: window.innerWidth / 2,
+        y: blindPackState.phase === "sealed" || blindPackState.phase === "opening"
+            ? window.innerHeight * 0.46
+            : window.innerHeight * 0.42
+    };
+}
+
+function spawnBlindPackParticles(options = {}) {
+    const origin = options.origin || getBlindPackFxOrigin();
+    const count = options.count || 14;
+    const palette = options.palette || ["255,228,168", "255,151,211", "119,183,255"];
+    const speed = options.speed || 0.22;
+    const spread = options.spread || 1;
+    const gravity = typeof options.gravity === "number" ? options.gravity : 0.00022;
+    const life = options.life || 900;
+
+    for (let index = 0; index < count; index += 1) {
+        const angle = (Math.PI * 2 * index) / count + (Math.random() - 0.5) * spread;
+        const velocity = speed * (0.5 + Math.random());
+
+        blindPackParticles.push({
+            x: origin.x + (Math.random() - 0.5) * 18,
+            y: origin.y + (Math.random() - 0.5) * 18,
+            vx: Math.cos(angle) * velocity,
+            vy: Math.sin(angle) * velocity - speed * 0.4,
+            size: 2 + Math.random() * 4,
+            life,
+            ttl: life,
+            gravity,
+            alpha: 1,
+            color: palette[index % palette.length]
+        });
+    }
+}
+
+function updateBlindPackParticles(deltaMs) {
+    for (let index = blindPackParticles.length - 1; index >= 0; index -= 1) {
+        const particle = blindPackParticles[index];
+        particle.life -= deltaMs;
+
+        if (particle.life <= 0) {
+            blindPackParticles.splice(index, 1);
+            continue;
+        }
+
+        particle.vy += particle.gravity * deltaMs;
+        particle.x += particle.vx * deltaMs;
+        particle.y += particle.vy * deltaMs;
+        particle.alpha = particle.life / particle.ttl;
+    }
+}
+
+function drawBlindPackParticles() {
+    const canvas = document.getElementById("blindPackFx");
+
+    if (!canvas || !blindPackFxContext) {
+        return;
+    }
+
+    blindPackFxContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    blindPackParticles.forEach((particle) => {
+        blindPackFxContext.save();
+        blindPackFxContext.globalAlpha = particle.alpha;
+        blindPackFxContext.fillStyle = `rgba(${particle.color}, ${0.7 * particle.alpha})`;
+        blindPackFxContext.beginPath();
+        blindPackFxContext.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        blindPackFxContext.fill();
+        blindPackFxContext.restore();
+    });
+}
+
+function startBlindPackFxLoop() {
+    resizeBlindPackCanvas(true);
+    stopBlindPackFxLoop();
+
+    const tick = (now) => {
+        const deltaMs = blindPackFxLastTime ? Math.min(32, now - blindPackFxLastTime) : 16;
+        blindPackFxLastTime = now;
+
+        const sceneActive = scenes.blindPack && scenes.blindPack.classList.contains("active");
+
+        if (sceneActive) {
+            const shouldSpawnAmbient = (blindPackState.phase === "sealed" || blindPackState.phase === "deck" || blindPackState.phase === "final")
+                && Math.random() < (blindPackState.phase === "final" ? 0.24 : 0.09);
+
+            if (shouldSpawnAmbient) {
+                const origin = getBlindPackFxOrigin();
+                spawnBlindPackParticles({
+                    origin: {
+                        x: origin.x + (Math.random() - 0.5) * 210,
+                        y: origin.y + (Math.random() - 0.5) * 180
+                    },
+                    count: blindPackState.phase === "final" ? 3 : 2,
+                    speed: blindPackState.phase === "final" ? 0.06 : 0.03,
+                    spread: Math.PI,
+                    gravity: -0.00002,
+                    life: blindPackState.phase === "final" ? 900 : 680
+                });
+            }
+
+            updateBlindPackParticles(deltaMs);
+            drawBlindPackParticles();
+        } else if (blindPackFxContext) {
+            blindPackFxContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        }
+
+        blindPackFxFrame = requestAnimationFrame(tick);
+    };
+
+    blindPackFxFrame = requestAnimationFrame(tick);
+}
+
+function resetBlindPackShellVisual() {
+    const shell = document.getElementById("blindPackShell");
+    const hero = document.getElementById("blindPackHero");
+    const deckArea = document.getElementById("blindDeckArea");
+    const deck = document.getElementById("blindPackDeck");
+    const finalText = document.getElementById("blindPackFinalText");
+    const deckHint = document.getElementById("blindDeckHint");
+
+    if (!shell) {
+        return;
+    }
+
+    closeBlindPackGallery(true);
+
+    [
+        "--pack-shift-x",
+        "--pack-shift-y",
+        "--pack-scale",
+        "--pack-rotate",
+        "--pack-closed-opacity",
+        "--pack-tear-opacity",
+        "--pack-tear-scale",
+        "--pack-flash-opacity",
+        "--pack-flash-scale",
+        "--pack-halves-opacity",
+        "--pack-left-x",
+        "--pack-left-y",
+        "--pack-left-rotate",
+        "--pack-right-x",
+        "--pack-right-y",
+        "--pack-right-rotate"
+    ].forEach((property) => shell.style.removeProperty(property));
+
+    shell.dataset.locked = "true";
+    shell.setAttribute("aria-disabled", "true");
+    hero.classList.remove("hidden");
+    deckArea.classList.remove("show");
+    deckArea.classList.remove("is-resetting");
+    if (deck) {
+        deck.classList.remove("is-final-grid");
+    }
+    finalText.classList.remove("show");
+    finalText.textContent = "Đây là những kỷ niệm dành cho bạn ❤️";
+    deckHint.textContent = "\u004c\u01b0\u1edbt \u0111\u1ec3 xem t\u1eebng t\u1ea5m";
+    setBlindPackReloadButtonState(true);
+}
+
+function clearBlindPackScene() {
+    clearBlindPackTimers();
+
+    if (blindPackAnimationFrame) {
+        cancelAnimationFrame(blindPackAnimationFrame);
+        blindPackAnimationFrame = null;
+    }
+
+    blindPackParticles.length = 0;
+    drawBlindPackParticles();
+    stopBlindPackFxLoop();
+
+    blindPackState.phase = "idle";
+    blindPackState.ready = false;
+    blindPackState.opening = false;
+    blindPackState.revealing = false;
+    blindPackState.reloading = false;
+    blindPackState.finished = false;
+    blindPackState.currentIndex = 0;
+    blindPackState.revealCardIndex = null;
+    blindPackState.revealedCount = 0;
+    blindPackState.cards = [];
+    blindPackState.touchMoved = false;
+
+    resetBlindPackShellVisual();
+    stopHeartRain();
+}
+
+function setBlindPackSceneAssets(packImage, cardBackImage) {
+    const scene = document.getElementById("blind-pack-scene");
+    const packImageEl = document.getElementById("blindPackClosed");
+
+    if (!scene || !packImageEl) {
+        return;
+    }
+
+    scene.style.setProperty("--blind-pack-image", `url("${packImage}")`);
+    scene.style.setProperty("--blind-card-back", `url("${cardBackImage}")`);
+    packImageEl.src = packImage;
+}
+
+function setBlindPackReloadButtonState(disabled, label = "Mở lại túi khác") {
+    const reloadButton = document.getElementById("blindPackReloadBtn");
+
+    if (!reloadButton) {
+        return;
+    }
+
+    reloadButton.disabled = disabled;
+    reloadButton.textContent = label;
+}
+
+function updateBlindPackProgress(value) {
+    const progress = document.getElementById("blindPackProgress");
+    const total = BLIND_PACK_CONFIG.totalCards;
+
+    if (!progress) {
+        return;
+    }
+
+    progress.textContent = `\u0054\u1ea5m ${clampNumber(value, 0, total)} / ${total}`;
+}
+
+function getBlindPackGalleryElements() {
+    return {
+        overlay: document.getElementById("blindPackGallery"),
+        label: document.getElementById("blindPackGalleryLabel"),
+        closeButton: document.getElementById("blindPackGalleryClose"),
+        viewport: document.getElementById("blindPackGalleryViewport"),
+        track: document.getElementById("blindPackGalleryTrack")
+    };
+}
+
+function formatBlindPackGalleryLabel(card, index) {
+    const rawLabel = String(card && card.label ? card.label : "IBC02");
+    const normalized = rawLabel
+        .replace(/^Folder\s+/i, "")
+        .replace(/^boy/i, "Boy ")
+        .replace(/^mix$/i, "Mix")
+        .trim();
+
+    return `Ảnh ${index + 1} / ${blindPackState.cards.length} • ${normalized}`;
+}
+
+function buildBlindPackGallerySlide(card, isCurrent = false) {
+    const slide = document.createElement("div");
+    const cardEl = document.createElement("div");
+    const media = document.createElement("div");
+    const img = document.createElement("img");
+
+    slide.className = `blind-pack-gallery-slide${isCurrent ? " is-current" : ""}`;
+    cardEl.className = "blind-pack-gallery-card";
+    media.className = `blind-pack-gallery-media is-${card.orientation || "portrait"}`;
+    img.src = card.src;
+    img.alt = card.label || "IBC02 memory";
+    img.decoding = "async";
+    img.draggable = false;
+
+    media.appendChild(img);
+    cardEl.appendChild(media);
+    slide.appendChild(cardEl);
+    return slide;
+}
+
+function renderBlindPackGallery() {
+    const { overlay, label, track } = getBlindPackGalleryElements();
+    const cards = blindPackState.cards;
+
+    if (!overlay || !label || !track || !cards.length) {
+        return;
+    }
+
+    const total = cards.length;
+    const currentIndex = ((blindPackGalleryState.activeIndex % total) + total) % total;
+    const previousIndex = (currentIndex - 1 + total) % total;
+    const nextIndex = (currentIndex + 1) % total;
+
+    blindPackGalleryState.activeIndex = currentIndex;
+    label.textContent = formatBlindPackGalleryLabel(cards[currentIndex], currentIndex);
+    overlay.classList.toggle("is-zoomed", blindPackGalleryState.zoomed);
+
+    track.innerHTML = "";
+    track.appendChild(buildBlindPackGallerySlide(cards[previousIndex], false));
+    track.appendChild(buildBlindPackGallerySlide(cards[currentIndex], true));
+    track.appendChild(buildBlindPackGallerySlide(cards[nextIndex], false));
+    track.style.transition = "none";
+    track.style.transform = "translate3d(-33.333333%, 0, 0)";
+
+    requestAnimationFrame(() => {
+        if (!blindPackGalleryState.navigating) {
+            track.style.transition = "";
+        }
+    });
+}
+
+function closeBlindPackGallery(immediate = false) {
+    const { overlay, track } = getBlindPackGalleryElements();
+
+    if (!overlay) {
+        return;
+    }
+
+    blindPackGalleryState.open = false;
+    blindPackGalleryState.zoomed = false;
+    blindPackGalleryState.navigating = false;
+    overlay.classList.remove("is-zoomed");
+
+    if (track) {
+        track.style.transition = "none";
+        track.style.transform = "translate3d(-33.333333%, 0, 0)";
+    }
+
+    if (immediate) {
+        overlay.classList.remove("show");
+        overlay.hidden = true;
+        overlay.setAttribute("aria-hidden", "true");
+        return;
+    }
+
+    overlay.classList.remove("show");
+    overlay.setAttribute("aria-hidden", "true");
+    window.setTimeout(() => {
+        if (!blindPackGalleryState.open) {
+            overlay.hidden = true;
+        }
+    }, 280);
+}
+
+function openBlindPackGallery(index) {
+    if (!blindPackState.finished || !blindPackState.cards.length) {
+        return;
+    }
+
+    const { overlay } = getBlindPackGalleryElements();
+
+    if (!overlay) {
+        return;
+    }
+
+    blindPackGalleryState.activeIndex = index;
+    blindPackGalleryState.open = true;
+    blindPackGalleryState.zoomed = false;
+    blindPackGalleryState.navigating = false;
+    renderBlindPackGallery();
+    overlay.hidden = false;
+    overlay.setAttribute("aria-hidden", "false");
+
+    requestAnimationFrame(() => {
+        overlay.classList.add("show");
+    });
+}
+
+function toggleBlindPackGalleryZoom() {
+    const { overlay } = getBlindPackGalleryElements();
+
+    if (!overlay || !blindPackGalleryState.open || blindPackGalleryState.navigating) {
+        return;
+    }
+
+    blindPackGalleryState.zoomed = !blindPackGalleryState.zoomed;
+    overlay.classList.toggle("is-zoomed", blindPackGalleryState.zoomed);
+}
+
+function navigateBlindPackGallery(direction) {
+    const { track } = getBlindPackGalleryElements();
+    const cards = blindPackState.cards;
+
+    if (!track || !blindPackGalleryState.open || blindPackGalleryState.navigating || blindPackGalleryState.zoomed || cards.length < 2) {
+        return;
+    }
+
+    blindPackGalleryState.navigating = true;
+    blindPackGalleryState.ignoreClickUntil = performance.now() + 420;
+    track.style.transition = "transform 0.34s cubic-bezier(0.22, 1, 0.36, 1)";
+    track.style.transform = direction > 0
+        ? "translate3d(-66.666667%, 0, 0)"
+        : "translate3d(0%, 0, 0)";
+
+    const finalizeNavigation = () => {
+        if (!blindPackGalleryState.navigating) {
+            return;
+        }
+
+        blindPackGalleryState.activeIndex = (blindPackGalleryState.activeIndex + direction + cards.length) % cards.length;
+        blindPackGalleryState.navigating = false;
+        blindPackGalleryState.zoomed = false;
+        renderBlindPackGallery();
+    };
+
+    const handleTransitionEnd = () => {
+        track.removeEventListener("transitionend", handleTransitionEnd);
+        finalizeNavigation();
+    };
+
+    track.addEventListener("transitionend", handleTransitionEnd, { once: true });
+    window.setTimeout(() => {
+        if (blindPackGalleryState.navigating) {
+            finalizeNavigation();
+        }
+    }, 420);
+}
+
+function setupBlindPackGallery() {
+    const { overlay, closeButton, viewport } = getBlindPackGalleryElements();
+
+    if (!overlay || !closeButton || !viewport) {
+        return;
+    }
+
+    closeButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        closeBlindPackGallery();
+    });
+
+    overlay.addEventListener("click", (event) => {
+        if (!blindPackGalleryState.open || performance.now() < blindPackGalleryState.ignoreClickUntil) {
+            return;
+        }
+
+        if (event.target === overlay) {
+            closeBlindPackGallery();
+            return;
+        }
+
+        if (event.target.closest(".blind-pack-gallery-close")) {
+            closeBlindPackGallery();
+            return;
+        }
+
+        if (event.target.closest(".blind-pack-gallery-slide.is-current")) {
+            toggleBlindPackGalleryZoom();
+        }
+    });
+
+    viewport.addEventListener("touchstart", (event) => {
+        const touch = event.touches && event.touches[0];
+
+        if (!touch || !blindPackGalleryState.open) {
+            return;
+        }
+
+        blindPackGalleryState.touchStartX = touch.clientX;
+        blindPackGalleryState.touchStartY = touch.clientY;
+        blindPackGalleryState.touchMoved = false;
+    }, { passive: true });
+
+    viewport.addEventListener("touchmove", (event) => {
+        const touch = event.touches && event.touches[0];
+
+        if (!touch || !blindPackGalleryState.open) {
+            return;
+        }
+
+        const moveX = Math.abs(touch.clientX - blindPackGalleryState.touchStartX);
+        const moveY = Math.abs(touch.clientY - blindPackGalleryState.touchStartY);
+        blindPackGalleryState.touchMoved = moveX > 12 || moveY > 12;
+    }, { passive: true });
+
+    viewport.addEventListener("touchend", (event) => {
+        const touch = event.changedTouches && event.changedTouches[0];
+
+        if (!touch || !blindPackGalleryState.open) {
+            return;
+        }
+
+        const deltaX = touch.clientX - blindPackGalleryState.touchStartX;
+        const deltaY = touch.clientY - blindPackGalleryState.touchStartY;
+        const absX = Math.abs(deltaX);
+        const absY = Math.abs(deltaY);
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+
+        if (absX > 48 && absX > absY + 8) {
+            blindPackGalleryState.ignoreClickUntil = performance.now() + 420;
+            navigateBlindPackGallery(deltaX < 0 ? 1 : -1);
+            return;
+        }
+
+        if (!blindPackGalleryState.touchMoved && absX < 10 && absY < 10) {
+            blindPackGalleryState.ignoreClickUntil = performance.now() + 220;
+
+            if (target && target.closest(".blind-pack-gallery-close")) {
+                closeBlindPackGallery();
+                return;
+            }
+
+            if (!target || !target.closest(".blind-pack-gallery-panel")) {
+                closeBlindPackGallery();
+                return;
+            }
+
+            if (target.closest(".blind-pack-gallery-slide.is-current")) {
+                toggleBlindPackGalleryZoom();
+            }
+        }
+    }, { passive: true });
+}
+
+function renderBlindPackDeck(cards) {
+    const deck = document.getElementById("blindPackDeck");
+
+    if (!deck) {
+        return;
+    }
+
+    deck.innerHTML = "";
+
+    blindPackState.cards = cards.map((card) => ({
+        ...card,
+        element: null
+    }));
+
+    blindPackState.cards.forEach((card, index) => {
+        const cardEl = document.createElement("div");
+        const inner = document.createElement("div");
+        const backFace = document.createElement("div");
+        const frontFace = document.createElement("div");
+        const media = document.createElement("div");
+        const img = document.createElement("img");
+
+        cardEl.className = "blind-card";
+        cardEl.dataset.cardIndex = String(index);
+
+        inner.className = "blind-card-inner";
+        backFace.className = "blind-card-face blind-card-back-face";
+        frontFace.className = "blind-card-face blind-card-front-face";
+        media.className = `blind-card-media is-${card.orientation || "portrait"}`;
+        img.src = card.src;
+        img.alt = card.label || `Blind pack card ${index + 1}`;
+        img.decoding = "async";
+        img.draggable = false;
+
+        media.appendChild(img);
+        frontFace.appendChild(media);
+        inner.appendChild(backFace);
+        inner.appendChild(frontFace);
+        cardEl.appendChild(inner);
+        deck.appendChild(cardEl);
+
+        card.element = cardEl;
+    });
+
+    layoutBlindPackDeck();
+}
+
+function calculateBlindPackFinalLayout(deck, totalCards) {
+    const deckWidth = deck ? (deck.clientWidth || Math.min(window.innerWidth * 0.92, 430)) : Math.min(window.innerWidth * 0.92, 430);
+    const deckHeight = deck ? (deck.clientHeight || Math.min(window.innerHeight * 0.74, 660)) : Math.min(window.innerHeight * 0.74, 660);
+    const gap = deckWidth < 380 ? 8 : 10;
+    let bestLayout = null;
+
+    for (let columns = 2; columns <= Math.min(5, totalCards); columns += 1) {
+        const rows = Math.ceil(totalCards / columns);
+        const widthByColumns = (deckWidth - gap * (columns - 1)) / columns;
+        const widthByRows = ((deckHeight - gap * (rows - 1)) / rows) * 0.75;
+        const cardWidth = Math.floor(Math.min(widthByColumns, widthByRows));
+
+        if (cardWidth <= 0) {
+            continue;
+        }
+
+        const cardHeight = Math.round(cardWidth * (4 / 3));
+        const usedWidth = columns * cardWidth + gap * (columns - 1);
+        const usedHeight = rows * cardHeight + gap * (rows - 1);
+
+        if (usedWidth > deckWidth + 0.5 || usedHeight > deckHeight + 0.5) {
+            continue;
+        }
+
+        const score = cardWidth * cardHeight;
+        if (!bestLayout || score > bestLayout.score) {
+            bestLayout = {
+                columns,
+                rows,
+                gap,
+                cardWidth,
+                cardHeight,
+                usedWidth,
+                usedHeight,
+                score
+            };
+        }
+    }
+
+    if (bestLayout) {
+        return bestLayout;
+    }
+
+    const columns = Math.min(4, totalCards);
+    const rows = Math.ceil(totalCards / columns);
+    const cardWidth = Math.floor((deckWidth - gap * (columns - 1)) / columns);
+    const cardHeight = Math.round(cardWidth * (4 / 3));
+
+    return {
+        columns,
+        rows,
+        gap,
+        cardWidth,
+        cardHeight,
+        usedWidth: columns * cardWidth + gap * (columns - 1),
+        usedHeight: rows * cardHeight + gap * (rows - 1)
+    };
+}
+
+function layoutBlindPackDeck() {
+    const deck = document.getElementById("blindPackDeck");
+    const total = blindPackState.cards.length;
+    const currentIndex = blindPackState.currentIndex;
+    const revealCardIndex = blindPackState.revealCardIndex;
+    const finalLayout = blindPackState.finished && deck ? calculateBlindPackFinalLayout(deck, total) : null;
+
+    if (deck) {
+        deck.classList.toggle("is-final-grid", !!finalLayout);
+    }
+
+    blindPackState.cards.forEach((card, index) => {
+        const element = card.element;
+
+        if (!element) {
+            return;
+        }
+
+        if (finalLayout) {
+            const column = index % finalLayout.columns;
+            const row = Math.floor(index / finalLayout.columns);
+            const x = -finalLayout.usedWidth / 2 + finalLayout.cardWidth / 2 + column * (finalLayout.cardWidth + finalLayout.gap);
+            const y = -finalLayout.usedHeight / 2 + finalLayout.cardHeight / 2 + row * (finalLayout.cardHeight + finalLayout.gap);
+            const rotation = (index % 2 === 0 ? -1 : 1) * 1.2;
+
+            element.style.setProperty("--blind-card-width", `${finalLayout.cardWidth}px`);
+            element.style.setProperty("--blind-card-height", `${finalLayout.cardHeight}px`);
+            element.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg) scale(1.03)`;
+            element.style.opacity = "1";
+            element.style.zIndex = `${60 + index}`;
+            element.classList.add("is-gallery", "is-flipped");
+            element.classList.remove("is-current");
+            return;
+        }
+
+        element.style.removeProperty("--blind-card-width");
+        element.style.removeProperty("--blind-card-height");
+        element.classList.remove("is-gallery");
+
+        const isArchived = index < currentIndex;
+        const isRevealFocus = revealCardIndex === index;
+        const isCurrent = !blindPackState.finished && revealCardIndex === null && index === currentIndex;
+        const hiddenBehind = revealCardIndex === null ? index - currentIndex : index - revealCardIndex;
+        let x = 0;
+        let y = 0;
+        let rotation = 0;
+        let scale = 1;
+        let opacity = 1;
+        let zIndex = total - index;
+
+        if (isArchived) {
+            const archivedCenter = Math.max(0, (blindPackState.revealedCount - 1) / 2);
+            const fanOffset = index - archivedCenter;
+            x = fanOffset * 22;
+            y = 180 + Math.abs(fanOffset) * 1.8;
+            rotation = fanOffset * 4.3;
+            scale = 0.34;
+            opacity = 0.98;
+            zIndex = 20 + index;
+        } else if (isRevealFocus) {
+            x = 0;
+            y = blindPackState.finished ? -20 : -18;
+            rotation = 0;
+            scale = 1.03;
+            zIndex = total + 80;
+        } else if (isCurrent) {
+            x = 0;
+            y = -8;
+            rotation = -1.8;
+            scale = 1;
+            zIndex = total + 40;
+        } else {
+            x = hiddenBehind * 1.4;
+            y = hiddenBehind * 2.2;
+            rotation = (hiddenBehind % 2 === 0 ? -1 : 1) * Math.min(5.5, hiddenBehind * 0.9);
+            scale = Math.max(0.8, 1 - hiddenBehind * 0.03);
+            opacity = Math.max(0.4, 1 - hiddenBehind * 0.08);
+        }
+
+        element.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg) scale(${scale})`;
+        element.style.opacity = `${opacity}`;
+        element.style.zIndex = `${zIndex}`;
+        element.classList.toggle("is-current", isCurrent || isRevealFocus);
+        element.classList.toggle("is-flipped", isArchived || isRevealFocus || blindPackState.finished);
+    });
+}
+
+function celebrateBlindPackFinale() {
+    const finalText = document.getElementById("blindPackFinalText");
+    const deckHint = document.getElementById("blindDeckHint");
+
+    blindPackState.finished = true;
+    blindPackState.phase = "final";
+    blindPackState.revealing = false;
+    blindPackState.currentIndex = blindPackState.cards.length;
+    blindPackState.revealCardIndex = null;
+    blindPackState.revealedCount = blindPackState.cards.length;
+    updateBlindPackProgress(BLIND_PACK_CONFIG.totalCards);
+    finalText.textContent = "Đây là những kỷ niệm dành cho bạn ❤️";
+    deckHint.textContent = "Chạm từng tấm để xem kỹ hơn";
+
+    spawnBlindPackParticles({
+        count: 34,
+        speed: 0.24,
+        spread: Math.PI * 2,
+        life: 1200
+    });
+
+    startHeartRain();
+    if (heartRainStopTimer) {
+        clearTimeout(heartRainStopTimer);
+    }
+    heartRainStopTimer = setTimeout(() => {
+        stopHeartRain();
+    }, 2200);
+
+    setBlindPackReloadButtonState(false);
+    requestAnimationFrame(() => {
+        layoutBlindPackDeck();
+        finalText.classList.add("show");
+    });
+}
+
+function revealNextBlindPackCard() {
+    if (!blindPackState.ready || blindPackState.opening || blindPackState.revealing || blindPackState.finished || blindPackState.reloading) {
+        return;
+    }
+
+    const nextIndex = blindPackState.currentIndex;
+
+    if (nextIndex >= blindPackState.cards.length) {
+        celebrateBlindPackFinale();
+        return;
+    }
+
+    blindPackState.revealing = true;
+    blindPackState.phase = "revealing";
+    blindPackState.revealCardIndex = nextIndex;
+    layoutBlindPackDeck();
+    spawnBlindPackParticles({
+        count: 12,
+        speed: 0.14,
+        spread: Math.PI * 1.3,
+        life: 720
+    });
+
+    queueBlindPackTimer(() => {
+        blindPackState.revealedCount = nextIndex + 1;
+        updateBlindPackProgress(blindPackState.revealedCount);
+    }, 320);
+
+    queueBlindPackTimer(() => {
+        const isLastCard = nextIndex >= blindPackState.cards.length - 1;
+
+        if (isLastCard) {
+            celebrateBlindPackFinale();
+            return;
+        }
+
+        blindPackState.currentIndex = nextIndex + 1;
+        blindPackState.revealCardIndex = null;
+        blindPackState.revealing = false;
+        blindPackState.phase = "deck";
+        layoutBlindPackDeck();
+    }, 980);
+}
+
+function runBlindPackOpenAnimation() {
+    const shell = document.getElementById("blindPackShell");
+    const hero = document.getElementById("blindPackHero");
+    const deckArea = document.getElementById("blindDeckArea");
+    const hint = document.getElementById("blindPackHint");
+
+    if (!shell || blindPackState.opening || blindPackState.reloading || !blindPackState.ready) {
+        return;
+    }
+
+    if (blindPackAnimationFrame) {
+        cancelAnimationFrame(blindPackAnimationFrame);
+        blindPackAnimationFrame = null;
+    }
+
+    blindPackState.opening = true;
+    blindPackState.phase = "opening";
+    shell.dataset.locked = "true";
+    setBlindPackReloadButtonState(true, "Đang tạo túi mới...");
+    hint.textContent = "\u0110ang m\u1edf t\u00fai qu\u00e0...";
+
+    const startTime = performance.now();
+    let burstTriggered = false;
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const animate = (now) => {
+        const elapsed = now - startTime;
+        const shakeStrength = elapsed < 420 ? 1 - elapsed / 420 : 0;
+        const shakeX = Math.sin(elapsed * 0.12) * 7 * shakeStrength;
+        const rotate = Math.sin(elapsed * 0.08) * 4.4 * shakeStrength;
+        const scaleBoost = elapsed < 560
+            ? 1 + easeOutCubic(clampNumber((elapsed - 220) / 260, 0, 1)) * 0.05
+            : 1.05 - easeOutCubic(clampNumber((elapsed - 780) / 400, 0, 1)) * 0.1;
+        const tearProgress = easeOutCubic(clampNumber((elapsed - 180) / 220, 0, 1));
+        const splitProgress = easeOutCubic(clampNumber((elapsed - 520) / 420, 0, 1));
+        const flashProgress = clampNumber((elapsed - 620) / 260, 0, 1);
+        const fadeOutProgress = clampNumber((elapsed - 980) / 260, 0, 1);
+
+        shell.style.setProperty("--pack-shift-x", `${shakeX.toFixed(2)}px`);
+        shell.style.setProperty("--pack-shift-y", `${(splitProgress * -8).toFixed(2)}px`);
+        shell.style.setProperty("--pack-scale", `${scaleBoost.toFixed(3)}`);
+        shell.style.setProperty("--pack-rotate", `${rotate.toFixed(2)}deg`);
+        shell.style.setProperty("--pack-tear-opacity", `${tearProgress.toFixed(3)}`);
+        shell.style.setProperty("--pack-tear-scale", `${(0.3 + tearProgress * 0.7).toFixed(3)}`);
+        shell.style.setProperty("--pack-closed-opacity", `${(1 - clampNumber((elapsed - 520) / 150, 0, 1)).toFixed(3)}`);
+        shell.style.setProperty("--pack-halves-opacity", `${(1 - fadeOutProgress * 0.92).toFixed(3)}`);
+        shell.style.setProperty("--pack-left-x", `${(-48 * splitProgress).toFixed(2)}px`);
+        shell.style.setProperty("--pack-left-y", `${(-22 * splitProgress).toFixed(2)}px`);
+        shell.style.setProperty("--pack-left-rotate", `${(-22 * splitProgress).toFixed(2)}deg`);
+        shell.style.setProperty("--pack-right-x", `${(48 * splitProgress).toFixed(2)}px`);
+        shell.style.setProperty("--pack-right-y", `${(-22 * splitProgress).toFixed(2)}px`);
+        shell.style.setProperty("--pack-right-rotate", `${(22 * splitProgress).toFixed(2)}deg`);
+
+        const flashOpacity = flashProgress < 0.55
+            ? flashProgress / 0.55
+            : 1 - ((flashProgress - 0.55) / 0.45);
+        shell.style.setProperty("--pack-flash-opacity", `${clampNumber(flashOpacity, 0, 1).toFixed(3)}`);
+        shell.style.setProperty("--pack-flash-scale", `${(0.4 + easeOutCubic(flashProgress) * 1.2).toFixed(3)}`);
+
+        if (!burstTriggered && elapsed >= 660) {
+            burstTriggered = true;
+            spawnBlindPackParticles({
+                count: 28,
+                speed: 0.2,
+                spread: Math.PI * 2,
+                life: 960
+            });
+        }
+
+        if (elapsed >= 1500) {
+            blindPackAnimationFrame = null;
+            hero.classList.add("hidden");
+            deckArea.classList.add("show");
+            blindPackState.phase = "deck";
+            blindPackState.opening = false;
+            blindPackState.reloading = false;
+            hint.textContent = "\u0043h\u1ea1m \u0111\u1ec3 m\u1edf t\u00fai qu\u00e0";
+            shell.style.setProperty("--pack-halves-opacity", "0");
+            setBlindPackReloadButtonState(false);
+            layoutBlindPackDeck();
+            return;
+        }
+
+        blindPackAnimationFrame = requestAnimationFrame(animate);
+    };
+
+    blindPackAnimationFrame = requestAnimationFrame(animate);
+}
+
+function startBlindPackScene(options = {}) {
+    const { autoOpen = false, previousSignature = blindPackLastPackSignature } = options;
+    const currentRun = ++blindPackRunToken;
+    const hint = document.getElementById("blindPackHint");
+    const shell = document.getElementById("blindPackShell");
+    const finalText = document.getElementById("blindPackFinalText");
+    const deck = document.getElementById("blindPackDeck");
+
+    clearCommentTimers();
+    recordRuntimeCheckpoint("blind-pack-scene-start");
+    clearBlindPackScene();
+    showScene("blind-pack-scene");
+    startBlindPackFxLoop();
+    resetBlindPackShellVisual();
+    updateBlindPackProgress(0);
+    hint.textContent = autoOpen ? "\u0110ang chu\u1ea9n b\u1ecb t\u00fai qu\u00e0 m\u1edbi..." : "\u0110ang chu\u1ea9n b\u1ecb t\u00fai qu\u00e0...";
+    finalText.classList.remove("show");
+    deck.innerHTML = "";
+    setBlindPackReloadButtonState(true, autoOpen ? "Đang tạo túi mới..." : "Mở lại túi khác");
+
+    prepareBlindPackResources(previousSignature).then(({ packImage, cardBackImage, cards }) => {
+        if (currentRun !== blindPackRunToken) {
+            return;
+        }
+
+        blindPackState.currentIndex = 0;
+        blindPackState.revealCardIndex = null;
+        blindPackState.revealedCount = 0;
+        blindPackState.ready = true;
+        blindPackState.reloading = false;
+        blindPackState.phase = "sealed";
+
+        setBlindPackSceneAssets(packImage, cardBackImage);
+        renderBlindPackDeck(cards);
+        delete shell.dataset.locked;
+        shell.removeAttribute("disabled");
+        shell.setAttribute("aria-disabled", "false");
+        hint.textContent = "\u0043h\u1ea1m \u0111\u1ec3 m\u1edf t\u00fai qu\u00e0";
+
+        if (autoOpen) {
+            queueBlindPackTimer(() => {
+                if (currentRun === blindPackRunToken && blindPackState.phase === "sealed" && blindPackState.ready) {
+                    runBlindPackOpenAnimation();
+                }
+            }, 160);
+        }
+    }).catch(() => {
+        if (currentRun !== blindPackRunToken) {
+            return;
+        }
+
+        const fallbackCards = shuffleArray(Array.from({ length: BLIND_PACK_CONFIG.totalCards }, (_, index) => ({
+            src: buildBlindCardPlaceholder(`CARD ${index + 1}`, "#ffcf87", "#8f45c4"),
+            label: `Card ${index + 1}`,
+            width: 660,
+            height: 900,
+            orientation: "portrait",
+            id: `blind-pack-card-fallback-${index + 1}`
+        }))).map((card, index) => ({
+            ...card,
+            id: `blind-pack-card-fallback-${index + 1}`
+        }));
+
+        blindPackState.ready = true;
+        blindPackState.reloading = false;
+        blindPackState.phase = "sealed";
+        setBlindPackSceneAssets(DEFAULT_BLIND_PACK_IMAGE, DEFAULT_CARD_BACK_IMAGE);
+        blindPackLastPackSignature = serializeBlindPack(fallbackCards);
+        renderBlindPackDeck(fallbackCards);
+        delete shell.dataset.locked;
+        shell.removeAttribute("disabled");
+        shell.setAttribute("aria-disabled", "false");
+        hint.textContent = "\u0043h\u1ea1m \u0111\u1ec3 m\u1edf t\u00fai qu\u00e0";
+
+        if (autoOpen) {
+            queueBlindPackTimer(() => {
+                if (currentRun === blindPackRunToken && blindPackState.phase === "sealed" && blindPackState.ready) {
+                    runBlindPackOpenAnimation();
+                }
+            }, 160);
+        }
+    });
+}
+
+function reloadBlindPackScene() {
+    const deckArea = document.getElementById("blindDeckArea");
+    const finalText = document.getElementById("blindPackFinalText");
+    const deckHint = document.getElementById("blindDeckHint");
+
+    if (!deckArea || blindPackState.opening || blindPackState.revealing || blindPackState.reloading || !blindPackState.cards.length) {
+        return;
+    }
+
+    blindPackState.reloading = true;
+    blindPackState.ready = false;
+    blindPackState.revealing = false;
+    blindPackState.phase = "reloading";
+    stopHeartRain();
+    finalText.classList.remove("show");
+    deckHint.textContent = "Đang xáo lại bộ thẻ...";
+    setBlindPackReloadButtonState(true, "Đang tạo túi mới...");
+    deckArea.classList.add("is-resetting");
+
+    queueBlindPackTimer(() => {
+        startBlindPackScene({
+            autoOpen: true,
+            previousSignature: blindPackLastPackSignature
+        });
+    }, 320);
+}
+
+function handleBlindPackTap(event) {
+    if (event) {
+        if (typeof event.preventDefault === "function") {
+            event.preventDefault();
+        }
+        if (typeof event.stopPropagation === "function") {
+            event.stopPropagation();
+        }
+    }
+
+    const hint = document.getElementById("blindPackHint");
+
+    if (!blindPackState.ready) {
+        if (hint) {
+            hint.textContent = "Đợi mình xáo bài một chút nhé...";
+        }
+        return false;
+    }
+
+    if (blindPackState.phase !== "sealed" || blindPackState.opening || blindPackState.reloading) {
+        return false;
+    }
+
+    if (blindPackState.finished) {
+        return false;
+    }
+
+    blindPackLastInteractionAt = performance.now();
+    runBlindPackOpenAnimation();
+    return false;
+}
+
+function setupBlindPackScene() {
+    const stage = document.getElementById("blindPackStage");
+    const shell = document.getElementById("blindPackShell");
+    const hero = document.getElementById("blindPackHero");
+    const deckArea = document.getElementById("blindDeckArea");
+    const hint = document.getElementById("blindPackHint");
+    const reloadButton = document.getElementById("blindPackReloadBtn");
+
+    if (!stage || !shell || !hero || !deckArea || !hint || !reloadButton) {
+        return;
+    }
+
+    setBlindPackReloadButtonState(true);
+    hero.style.cursor = "pointer";
+
+    const openIfSealed = (event) => {
+        if (event && event.target && (event.target === reloadButton || reloadButton.contains(event.target))) {
+            return;
+        }
+
+        handleBlindPackTap(event);
+    };
+
+    [stage, hero, shell, hint].forEach((element) => {
+        element.addEventListener("pointerup", openIfSealed);
+        element.addEventListener("click", openIfSealed);
+    });
+
+    reloadButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        if (performance.now() - blindPackLastInteractionAt < 260) {
+            return;
+        }
+
+        blindPackLastInteractionAt = performance.now();
+        reloadBlindPackScene();
+    });
+
+    deckArea.addEventListener("click", (event) => {
+        if (performance.now() < blindPackGalleryState.ignoreClickUntil) {
+            return;
+        }
+
+        const targetCard = event.target.closest(".blind-card");
+
+        if (performance.now() - blindPackLastInteractionAt < 260) {
+            return;
+        }
+
+        blindPackLastInteractionAt = performance.now();
+
+        if (blindPackState.finished) {
+            if (targetCard) {
+                openBlindPackGallery(Number(targetCard.dataset.cardIndex || 0));
+            }
+            return;
+        }
+
+        revealNextBlindPackCard();
+    });
+
+    deckArea.addEventListener("touchstart", (event) => {
+        const touch = event.touches && event.touches[0];
+
+        if (!touch) {
+            return;
+        }
+
+        blindPackState.touchStartX = touch.clientX;
+        blindPackState.touchStartY = touch.clientY;
+        blindPackState.touchMoved = false;
+    }, { passive: true });
+
+    deckArea.addEventListener("touchmove", (event) => {
+        const touch = event.touches && event.touches[0];
+
+        if (!touch) {
+            return;
+        }
+
+        const moveX = Math.abs(touch.clientX - blindPackState.touchStartX);
+        const moveY = Math.abs(touch.clientY - blindPackState.touchStartY);
+        blindPackState.touchMoved = moveX > 12 || moveY > 12;
+    }, { passive: true });
+
+    deckArea.addEventListener("touchend", (event) => {
+        const touch = event.changedTouches && event.changedTouches[0];
+
+        if (!touch) {
+            return;
+        }
+
+        if (blindPackState.finished) {
+            return;
+        }
+
+        const deltaX = touch.clientX - blindPackState.touchStartX;
+        const deltaY = touch.clientY - blindPackState.touchStartY;
+        const isSwipeLeft = deltaX < -34 && Math.abs(deltaX) > Math.abs(deltaY);
+        const isTap = !blindPackState.touchMoved && Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10;
+
+        if (isSwipeLeft || isTap) {
+            blindPackLastInteractionAt = performance.now();
+            revealNextBlindPackCard();
+        }
+    }, { passive: true });
+}
+
+        function showScene(sceneId) {
+            Object.values(scenes).forEach((scene) => scene.classList.remove("active"));
+            document.getElementById(sceneId).classList.add("active");
+        }
+
+        function runScene2() {
+            const scene = document.getElementById("scene2_text");
+            const textEl = document.getElementById("typewriterText");
+
+            if (!scene || !textEl) {
+                showScene("scene3_logo");
+                runScene3();
+                return;
+            }
+
+            if (scene2Timer) {
+                clearTimeout(scene2Timer);
+                scene2Timer = null;
+            }
+
+            if (scene2TypingTimer) {
+                clearTimeout(scene2TypingTimer);
+                scene2TypingTimer = null;
+            }
+
+            const fullText = "30 ng\u01b0\u1eddi - 22 \u0111\u00f3a h\u1ed3ng - 8 anh trai\n4 n\u0103m \u0111\u1ea1i h\u1ecdc - 1 l\u1edbp h\u1ecdc";
+            const normalized = fullText.normalize("NFC");
+            const segments = (typeof Intl !== "undefined" && Intl.Segmenter)
+                ? Array.from(new Intl.Segmenter("vi", { granularity: "grapheme" }).segment(normalized), (segment) => segment.segment)
+                : Array.from(normalized);
+
+            textEl.innerHTML = '<span id="typedText"></span><span class="cursor" id="typedCursor"></span>';
+            const typedText = document.getElementById("typedText");
+            const typedCursor = document.getElementById("typedCursor");
+
+            let index = 0;
+
+            const typeNext = () => {
+                if (index >= segments.length) {
+                    scene2TypingTimer = null;
+                    typedCursor.style.opacity = "0";
+                    scene2Timer = setTimeout(() => {
+                        scene2Timer = null;
+                        showScene("scene3_logo");
+                        runScene3();
+                    }, 1300);
+                    return;
+                }
+
+                const currentChar = segments[index];
+                if (currentChar === "\n") {
+                    typedText.innerHTML += "<br>";
+                } else {
+                    typedText.innerHTML += currentChar;
+                }
+
+                index += 1;
+                scene2TypingTimer = setTimeout(typeNext, currentChar === "\n" ? 240 : 82);
+            };
+
+            typeNext();
+        }
+
+        function setupMarvelFrames() {
+            const bg = document.getElementById("marvelBg");
+            const urls = Array.from({ length: 20 }, (_, i) => `https://picsum.photos/seed/img${i + 1}/1400/900`);
+            urls.forEach((url, i) => {
+                const img = document.createElement("img");
+                img.className = "flash-image";
+                img.src = url;
+                img.alt = `Flash frame ${i + 1}`;
+                bg.appendChild(img);
+            });
+        }
+
+        function runScene3() {
+            const scene = document.getElementById("scene3_logo");
+            const frames = Array.from(document.querySelectorAll(".flash-image"));
+            let idx = 0;
+
+            const timer = setInterval(() => {
+                frames.forEach((f) => f.classList.remove("show"));
+                frames[idx].classList.add("show");
+                idx = (idx + 1) % frames.length;
+            }, 100);
+
+            setTimeout(() => {
+                clearInterval(timer);
+                scene.classList.add("fade-out");
+                setTimeout(() => {
+                    scene.classList.remove("fade-out");
+                    showScene("scene4_form");
+                }, 850);
+            }, 3000);
+        }
+
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            heart.innerHTML = "❤️";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        function startHeartRain() {
+            if (heartRainTimer) {
+                return;
+            }
+            heartRainTimer = setInterval(createHeart, 200);
+        }
+
+        function stopHeartRain() {
+            if (heartRainTimer) {
+                clearInterval(heartRainTimer);
+                heartRainTimer = null;
+            }
+            if (heartRainStopTimer) {
+                clearTimeout(heartRainStopTimer);
+                heartRainStopTimer = null;
+            }
+        }
+
+        function setupScene4Form() {
+            let koScale = 1;
+
+            // Placeholder image for layout preview
+            const happyImages = [
+                "https://picsum.photos/seed/vui-placeholder-1/320/320",
+                "https://picsum.photos/seed/vui-placeholder-2/320/320",
+                "https://picsum.photos/seed/vui-placeholder-3/320/320",
+                "https://picsum.photos/seed/vui-placeholder-4/320/320",
+                "https://picsum.photos/seed/vui-placeholder-5/320/320"
+            ];
+
+            // Placeholder image for layout preview
+            const sadImages = [
+                "https://picsum.photos/seed/buon-placeholder-1/320/320",
+                "https://picsum.photos/seed/buon-placeholder-2/320/320",
+                "https://picsum.photos/seed/buon-placeholder-3/320/320",
+                "https://picsum.photos/seed/buon-placeholder-4/320/320",
+                "https://picsum.photos/seed/buon-placeholder-5/320/320"
+            ];
+
+            function getRandomImage(list) {
+                return list[Math.floor(Math.random() * list.length)];
+            }
+
+            const choiceButtons = document.getElementById("choiceButtons");
+            const reactionArea = document.getElementById("reactionArea");
+            const reactionImage = document.getElementById("reactionImage");
+            const speechBubble = document.getElementById("speechBubble");
+            const nameInputArea = document.getElementById("nameInputArea");
+            const happyImage = document.getElementById("happyImage");
+            const okBtn = document.getElementById("okBtn");
+            const btnKo = document.getElementById("btnKo");
+            const nameInput = document.getElementById("nameInput");
+            const confirmBtn = document.getElementById("confirmBtn");
+            const resultText = document.getElementById("resultText");
+
+            const goToFilmScene = (roseProfile) => {
+                const resolvedRose = roseProfile || createTransientRose(nameInput.value.trim() || selectedName || "IBC02");
+                selectedRose = resolvedRose;
+                selectedName = resolvedRose.name;
+                showScene("film-scene");
+                startFilmSceneForRose(selectedRose);
+            };
+
+            btnKo.addEventListener("click", () => {
+                koScale -= 0.15;
+                btnKo.style.transform = `scale(${Math.max(koScale, 0.2)})`;
+                reactionImage.src = getRandomImage(sadImages);
+                speechBubble.textContent = "Bạn đồng ý đi mà 🥺";
+                reactionArea.classList.add("show");
+                choiceButtons.classList.remove("hidden");
+                nameInputArea.classList.remove("show");
+            });
+
+            okBtn.addEventListener("click", () => {
+                const happySrc = getRandomImage(happyImages);
+                reactionImage.src = happySrc;
+                happyImage.src = happySrc;
+                speechBubble.textContent = "Hihi cảm ơn bạn nha 💖";
+                reactionArea.classList.add("show");
+                choiceButtons.classList.add("hidden");
+                startHeartRain();
+                if (heartRainStopTimer) {
+                    clearTimeout(heartRainStopTimer);
+                }
+                heartRainStopTimer = setTimeout(() => {
+                    stopHeartRain();
+                }, 1200);
+
+                setTimeout(() => {
+                    nameInputArea.classList.add("show");
+                    nameInput.focus();
+                }, 1000);
+            });
+
+
+
+            confirmBtn.addEventListener("click", () => {
+                const fullName = nameInput.value.trim();
+                if (!fullName) {
+                    resultText.textContent = "\u0042\u1ea1n vui l\u00f2ng nh\u1eadp \u0111\u1ea7y \u0111\u1ee7 h\u1ecd v\u00e0 t\u00ean nh\u00e9.";
+                    resultText.classList.add("show");
+                    return;
+                }
+
+                const matchedRose = findRoseByName(fullName);
+                const resolvedRose = matchedRose || createTransientRose(fullName);
+                const folderName = getRoseFolderName(resolvedRose, fullName);
+
+                selectedRose = resolvedRose;
+                selectedName = resolvedRose.name;
+                resultText.textContent = matchedRose
+                    ? `C\u1ea3m \u01a1n ${selectedName}. H\u1ec7 th\u1ed1ng \u0111ang n\u1ea1p \u1ea3nh v\u00e0 l\u1eddi ch\u00fac ri\u00eang c\u1ee7a b\u1ea1n.`
+                    : `\u0110\u00e3 d\u00f9ng th\u01b0 m\u1ee5c ./${folderName}/ cho ${selectedName}. N\u1ebfu mu\u1ed1n l\u1eddi ch\u00fac ri\u00eang, h\u00e3y th\u00eam b\u1ea1n n\u00e0y v\u00e0o ROSES.`;
+                resultText.classList.add("show");
+                stopHeartRain();
+
+                setTimeout(() => {
+                    goToFilmScene(resolvedRose);
+                }, 250);
+            });
+        }
+
+        function setupUnlockScreen() {
+            const unlockScreen = document.getElementById("unlock-screen");
+            const bar = document.getElementById("unlockBar");
+            const handle = document.getElementById("unlockHandle");
+
+            let dragging = false;
+            let startX = 0;
+            let startLeft = 0;
+            let unlocked = false;
+
+            const getMaxLeft = () => bar.clientWidth - handle.clientWidth;
+
+            const pointerDown = (clientX) => {
+                if (unlocked) {
+                    return;
+                }
+                dragging = true;
+                startX = clientX;
+                startLeft = parseFloat(handle.style.left || "0");
+                handle.style.transition = "none";
+            };
+
+            const pointerMove = (clientX) => {
+                if (!dragging || unlocked) {
+                    return;
+                }
+                const maxLeft = getMaxLeft();
+                const delta = clientX - startX;
+                const nextLeft = Math.min(maxLeft, Math.max(0, startLeft + delta));
+                handle.style.left = `${nextLeft}px`;
+            };
+
+            const pointerUp = () => {
+                if (!dragging || unlocked) {
+                    return;
+                }
+                dragging = false;
+
+                const maxLeft = getMaxLeft();
+                const currentLeft = parseFloat(handle.style.left || "0");
+                const threshold = maxLeft * 0.9;
+
+                handle.style.transition = "left 0.25s ease";
+
+                if (currentLeft >= threshold) {
+                    unlocked = true;
+                    handle.style.left = `${maxLeft}px`;
+
+                    setTimeout(() => {
+                        unlockScreen.classList.add("unlocked");
+                        showScene("scene2_text");
+                        runScene2();
+                    }, 180);
+
+                    setTimeout(() => {
+                        unlockScreen.style.display = "none";
+                    }, 900);
+                } else {
+                    handle.style.left = "0px";
+                }
+            };
+
+            handle.addEventListener("touchstart", (e) => {
+                pointerDown(e.touches[0].clientX);
+            }, { passive: true });
+
+            window.addEventListener("touchmove", (e) => {
+                pointerMove(e.touches[0].clientX);
+            }, { passive: true });
+
+            window.addEventListener("touchend", pointerUp);
+
+            handle.addEventListener("mousedown", (e) => {
+                e.preventDefault();
+                pointerDown(e.clientX);
+            });
+
+            window.addEventListener("mousemove", (e) => {
+                pointerMove(e.clientX);
+            });
+
+            window.addEventListener("mouseup", pointerUp);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const navigationEntry = typeof performance.getEntriesByType === "function"
+                ? performance.getEntriesByType("navigation")[0]
+                : null;
+            const lastCheckpoint = readRuntimeCheckpoint();
+
+            if (navigationEntry && navigationEntry.type === "reload" && lastCheckpoint) {
+                console.warn(`[IBC02] Previous runtime checkpoint before reload: ${lastCheckpoint.label}`);
+            }
+
+            setupMarvelFrames();
+            setupBlindPackGallery();
+            setupBlindPackScene();
+            setupScene4Form();
+            setupUnlockScreen();
+            window.addEventListener("resize", () => {
+                refreshFilmStripLayout();
+                resizeBlindPackCanvas();
+                layoutBlindPackDeck();
+                if (blindPackGalleryState.open) {
+                    renderBlindPackGallery();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+

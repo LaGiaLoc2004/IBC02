@@ -1,0 +1,15 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffca86"/>
+      <stop offset="100%" stop-color="#d86b85"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1200" rx="52" fill="url(#bg)"/>
+  <rect x="34" y="34" width="832" height="1132" rx="42" fill="rgba(20,12,24,0.16)" stroke="rgba(255,255,255,0.28)" stroke-width="8"/>
+  <circle cx="450" cy="350" r="170" fill="rgba(255,255,255,0.16)"/>
+  <path d="M450 240c28 58 70 98 126 124-72 24-118 80-126 160-8-80-56-136-132-160 58-26 100-66 132-124Z" fill="rgba(255,247,231,0.96)"/>
+  <rect x="152" y="702" width="596" height="216" rx="32" fill="rgba(15,10,18,0.22)"/>
+  <text x="50%" y="818" fill="#fff8ee" font-family="Arial, sans-serif" font-size="76" font-weight="700" text-anchor="middle">CLASS 2</text>
+  <text x="50%" y="888" fill="rgba(255,247,236,0.92)" font-family="Arial, sans-serif" font-size="34" text-anchor="middle">IBC02 CLASS MEMORY</text>
+</svg>
